@@ -5,7 +5,7 @@
 | Component | Technology | Version |
 |-----------|-----------|---------|
 | Framework | Astro | 6.4.x |
-| UI / CSS | Tailwind CSS | 3.x |
+| UI / CSS | Tailwind CSS v3 + PostCSS | 3.x |
 | Typography | Inter (Google Fonts) | — |
 | Icons | Lucide (via SVG inline) | — |
 | Animations | AOS (Animate On Scroll) | 2.3.4 |
@@ -142,3 +142,9 @@ npm run preview   # Preview du build
 - [ ] **Domain** : Acheter un nom de domaine (ex: besmainfoenergy.dz)
 - [ ] **Decap CMS** : Activer Git Gateway sur le repo
 - [ ] **Contenu réel** : Rédiger les textes définitifs, ajouter photos réelles
+
+## CHANGELOG
+
+| Date | Modification | Fichiers modifiés |
+|-----|-------------|-------------------|
+| 2026-06-18 | Correction bug déploiement Vercel : `@astrojs/tailwind` incompatible avec Astro 6. Remplacé par PostCSS + Tailwind v3 direct. | `astro.config.mjs`, `postcss.config.cjs` (nouveau), `package.json` |

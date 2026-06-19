@@ -5,9 +5,10 @@ import { getLangFromUrl, useTranslations } from "../../i18n/utils";
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const itSkillKeys = ["about.skills.it.1", "about.skills.it.2", "about.skills.it.3", "about.skills.it.4", "about.skills.it.5"];
-const energySkillKeys = ["about.skills.energy.1", "about.skills.energy.2", "about.skills.energy.3", "about.skills.energy.4", "about.skills.energy.5"];
-const certKeys = ["about.certifications.1", "about.certifications.2", "about.certifications.3"];
+const itSkillKeys = ["about.skills.it.1", "about.skills.it.2", "about.skills.it.3", "about.skills.it.4", "about.skills.it.5", "about.skills.it.6", "about.skills.it.7"];
+const energySkillKeys = ["about.skills.energy.1", "about.skills.energy.2", "about.skills.energy.3", "about.skills.energy.4", "about.skills.energy.5", "about.skills.energy.6", "about.skills.energy.7", "about.skills.energy.8"];
+const expKeys = ["about.experience.1", "about.experience.2", "about.experience.3", "about.experience.4", "about.experience.5", "about.experience.6"];
+const bgKeys = ["about.background.1", "about.background.2", "about.background.3"];
 ---
 
 <BaseLayout
@@ -68,13 +69,55 @@ const certKeys = ["about.certifications.1", "about.certifications.2", "about.cer
 
       <div data-aos="fade-up">
         <h2 class="text-2xl font-bold text-neutral-900 mb-6">{t("about.certifications")}</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {certKeys.map((key) => (
+
+        <h3 class="text-lg font-semibold text-primary-700 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+          {t("about.experience.title")}
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+          {expKeys.map((key) => (
             <div class="flex items-center gap-3 bg-white border border-neutral-200 rounded-xl p-4">
-              <svg class="w-6 h-6 text-secondary-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-              <span class="text-neutral-700 font-medium">{t(key)}</span>
+              <div class="w-2 h-2 rounded-full bg-secondary-500 shrink-0"></div>
+              <span class="text-neutral-700">{t(key)}</span>
             </div>
           ))}
+        </div>
+
+        <h3 class="text-lg font-semibold text-secondary-700 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /></svg>
+          {t("about.background.title")}
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {bgKeys.map((key) => (
+            <div class="flex items-center gap-3 bg-white border border-neutral-200 rounded-xl p-4">
+              <div class="w-2 h-2 rounded-full bg-primary-500 shrink-0"></div>
+              <span class="text-neutral-700">{t(key)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-16" data-aos="fade-up">
+        <h2 class="text-2xl font-bold text-neutral-900 mb-6">{t("about.links")}</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <a href="https://www.anae.dz/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 bg-white border border-neutral-200 rounded-xl p-5 hover:border-primary-300 hover:shadow-md transition-all">
+            <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shrink-0 overflow-hidden p-2">
+              <img src="/images/anae-logo.png" alt="ANAE" class="w-full h-full object-contain" />
+            </div>
+            <div>
+              <p class="font-medium text-neutral-900">ANAE</p>
+              <p class="text-sm text-neutral-500">{t("about.links.anae")}</p>
+            </div>
+          </a>
+          <a href="https://moukawil.dz/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-4 bg-white border border-neutral-200 rounded-xl p-5 hover:border-primary-300 hover:shadow-md transition-all">
+            <div class="w-14 h-14 rounded-xl bg-white flex items-center justify-center shrink-0 overflow-hidden p-2">
+              <img src="/images/moukawil-logo.png" alt="Moukawil" class="w-full h-full object-contain" />
+            </div>
+            <div>
+              <p class="font-medium text-neutral-900">Moukawil</p>
+              <p class="text-sm text-neutral-500">{t("about.links.moukawil")}</p>
+            </div>
+          </a>
         </div>
       </div>
     </div>

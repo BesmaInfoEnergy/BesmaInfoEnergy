@@ -16,10 +16,10 @@ export function useTranslatedPath(lang: Lang) {
   return function translatePath(path: string, l: string = lang) {
     const pathWithoutSlash = path.replace(/^\/+/, "").replace(/\/+$/, "");
     const isDefaultLang = l === defaultLang;
-    const langPrefix = isDefaultLang && showDefaultLang ? "" : `/${l}`;
+    const langPrefix = !isDefaultLang || showDefaultLang ? `/${l}` : "";
     if (pathWithoutSlash) {
-      return `${langPrefix}/${pathWithoutSlash}`;
+      return `${langPrefix}/${pathWithoutSlash}/`;
     }
-    return langPrefix || "/";
+    return `${langPrefix}/`;
   };
 }

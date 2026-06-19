@@ -1,9 +1,20 @@
 ---
 import { languages, defaultLang } from "../i18n/ui";
-import { useTranslatedPath } from "../i18n/utils";
 
 const { lang: currentLang } = Astro.props;
-const translatePath = useTranslatedPath(currentLang);
+
+function getLocalizedPath(targetLang: string): string {
+  const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+  for (const code of Object.keys(languages)) {
+    if (code === defaultLang) continue;
+    const prefix = `/${code}`;
+    if (path === prefix || path.startsWith(`${prefix}/`)) {
+      const rest = path.slice(prefix.length) || "/";
+      return targetLang === defaultLang ? rest : `/${targetLang}${rest}`;
+    }
+  }
+  return targetLang === defaultLang ? path : `/${targetLang}${path}`;
+}
 ---
 
 <div class="relative inline-block">
@@ -16,7 +27,7 @@ const translatePath = useTranslatedPath(currentLang);
   <div id="lang-dropdown" class="hidden absolute top-full mt-1 right-0 bg-white border border-neutral-200 rounded-lg shadow-lg py-1 min-w-[140px] z-50">
     {Object.entries(languages).map(([code, label]) => (
       <a
-        href={code === defaultLang ? translatePath("") : `/${code}`}
+        href={getLocalizedPath(code)}
         class={`block px-4 py-2 text-sm hover:bg-neutral-100 transition-colors ${code === currentLang ? "font-semibold text-primary-600 bg-primary-50" : "text-neutral-700"}`}
         lang={code}
       >

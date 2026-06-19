@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={t("legal.title")}
+  description={t("legal.desc")}
+  lang={lang}
+  dir={lang === "ar" ? "rtl" : "ltr"}
+>
+  <section class="py-20 md:py-28">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-4xl md:text-5xl font-bold text-neutral-900 mb-8" data-aos="fade-up">{t("legal.title")}</h1>
+      <div class="prose prose-neutral max-w-none" data-aos="fade-up">
+        {[1, 2, 3, 4].map((i) => (
+          <div>
+            <h2>{t(`legal.section.${i}.title`)}</h2>
+            <p>{t(`legal.section.${i}.text`)}</p>
+            {i === 1 && <p>{t("legal.section.1.text2")}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

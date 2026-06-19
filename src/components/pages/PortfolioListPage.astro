@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ProjectCard from "../ProjectCard.astro";
+import { getLangFromUrl, useTranslations } from "../../i18n/utils";
+import projects from "../../data/projects.json";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<BaseLayout
+  title={t("portfolio.title")}
+  description={t("portfolio.subtitle")}
+  lang={lang}
+  dir={lang === "ar" ? "rtl" : "ltr"}
+>
+  <section class="py-20 md:py-28 bg-gradient-to-b from-primary-900 to-primary-700 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{t("portfolio.title")}</h1>
+      <p class="text-xl text-neutral-200">{t("portfolio.subtitle")}</p>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {projects.map((project) => (
+          <ProjectCard key={project.id} project={project} lang={lang} t={t} />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

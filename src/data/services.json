@@ -1,0 +1,162 @@
+[
+  {
+    "id": "dev-web",
+    "category": "it",
+    "icon": "code",
+    "fr": {
+      "title": "Développement Web & Mobile",
+      "short": "Sites vitrines, applications web, e-commerce et apps mobiles sur mesure.",
+      "details": "De la conception à la mise en production, je réalise des solutions digitales performantes, responsives et optimisées SEO. Technologies : React, Next.js, Astro, Flutter, Node.js."
+    },
+    "en": {
+      "title": "Web & Mobile Development",
+      "short": "Showcase sites, web apps, e-commerce and custom mobile applications.",
+      "details": "From design to production, I build high-performance, responsive and SEO-optimized digital solutions. Technologies: React, Next.js, Astro, Flutter, Node.js."
+    },
+    "ar": {
+      "title": "تطوير الويب والتطبيقات",
+      "short": "مواقع تعريفية، تطبيقات ويب، تجارة إلكترونية وتطبيقات جوال مخصصة.",
+      "details": "من التصميم إلى الإنتاج، أقوم ببناء حلول رقمية عالية الأداء ومتوافقة مع الهواتف ومحسّنة لمحركات البحث."
+    }
+  },
+  {
+    "id": "maintenance",
+    "category": "it",
+    "icon": "wrench",
+    "fr": {
+      "title": "Maintenance & Dépannage",
+      "short": "Diagnostic, réparation et optimisation de vos équipements informatiques.",
+      "details": "Intervention rapide pour résoudre vos problèmes matériels et logiciels : virus, lenteur, panne, sauvegarde de données, installation de réseaux."
+    },
+    "en": {
+      "title": "Maintenance & Troubleshooting",
+      "short": "Diagnosis, repair and optimization of your computer equipment.",
+      "details": "Fast intervention to solve your hardware and software issues: viruses, slowness, breakdowns, data backup, network installation."
+    },
+    "ar": {
+      "title": "الصيانة وإصلاح الأعطال",
+      "short": "تشخيص وإصلاح وتحسين أجهزة الكمبيوتر الخاصة بك.",
+      "details": "تدخل سريع لحل مشاكلك البرمجية والمادية: فيروسات، بطء، أعطال، نسخ احتياطي للبيانات، تركيب الشبكات."
+    }
+  },
+  {
+    "id": "conseil-si",
+    "category": "it",
+    "icon": "globe",
+    "fr": {
+      "title": "Conseil en Systèmes d'Information",
+      "short": "Stratégie digitale, audit SI, transformation numérique et cloud.",
+      "details": "Accompagnement dans la définition de votre stratégie informatique, le choix de vos solutions logicielles et l'optimisation de vos processus métier."
+    },
+    "en": {
+      "title": "IT Consulting",
+      "short": "Digital strategy, IT audit, digital transformation and cloud.",
+      "details": "Support in defining your IT strategy, choosing your software solutions and optimizing your business processes."
+    },
+    "ar": {
+      "title": "استشارات نظم المعلومات",
+      "short": "استراتيجية رقمية، تدقيق نظم المعلومات، تحول رقمي وسحابي.",
+      "details": "دعم في تحديد استراتيجية تكنولوجيا المعلومات واختيار الحلول البرمجية وتحسين عملياتك التجارية."
+    }
+  },
+  {
+    "id": "securite",
+    "category": "it",
+    "icon": "shield",
+    "fr": {
+      "title": "Sécurité Informatique",
+      "short": "Audit de sécurité, protection des données, cybersécurité et conformité.",
+      "details": "Protection de votre infrastructure contre les menaces : tests d'intrusion, firewall, chiffrement, sensibilisation à la cybersécurité."
+    },
+    "en": {
+      "title": "Cybersecurity",
+      "short": "Security audit, data protection, cybersecurity and compliance.",
+      "details": "Protection of your infrastructure against threats: penetration testing, firewall, encryption, cybersecurity awareness."
+    },
+    "ar": {
+      "title": "الأمن المعلوماتي",
+      "short": "تدقيق أمني، حماية البيانات، الأمن السيبراني والامتثال.",
+      "details": "حماية بنيتك التحتية من التهديدات: اختبار الاختراق، جدار الحماية، التشفير، التوعية بالأمن السيبراني."
+    }
+  },
+  {
+    "id": "solaire",
+    "category": "energy",
+    "icon": "sun",
+    "fr": {
+      "title": "Énergie Solaire Photovoltaïque",
+      "short": "Installation de panneaux solaires pour particuliers et entreprises.",
+      "details": "Étude de faisabilité, dimensionnement, installation et maintenance de systèmes solaires photovoltaïques connectés au réseau ou en autoconsommation."
+    },
+    "en": {
+      "title": "Solar Photovoltaic Energy",
+      "short": "Solar panel installation for individuals and businesses.",
+      "details": "Feasibility study, sizing, installation and maintenance of grid-connected or self-consumption solar photovoltaic systems."
+    },
+    "ar": {
+      "title": "الطاقة الشمسية الكهروضوئية",
+      "short": "تركيب الألواح الشمسية للأفراد والشركات.",
+      "details": "دراسة الجدوى، تحديد الحجم، تركيب وصيانة أنظمة الطاقة الشمسية الكهروضوئية المتصلة بالشبكة أو للاستهلاك الذاتي."
+    }
+  },
+  {
+    "id": "audit-energetique",
+    "category": "energy",
+    "icon": "bar-chart",
+    "fr": {
+      "title": "Audit Énergétique",
+      "short": "Analyse des consommations et recommandations d'économies d'énergie.",
+      "details": "Diagnostic complet de vos installations, identification des gaspillages, préconisations d'amélioration avec retour sur investissement chiffré."
+    },
+    "en": {
+      "title": "Energy Audit",
+      "short": "Consumption analysis and energy saving recommendations.",
+      "details": "Complete diagnosis of your installations, identification of waste, improvement recommendations with quantified return on investment."
+    },
+    "ar": {
+      "title": "التدقيق الطاقوي",
+      "short": "تحليل الاستهلاك وتوصيات لتوفير الطاقة.",
+      "details": "تشخيص شامل لمنشآتك، تحديد الهدر، توصيات للتحسين مع عائد استثمار محدد."
+    }
+  },
+  {
+    "id": "efficacite",
+    "category": "energy",
+    "icon": "zap",
+    "fr": {
+      "title": "Efficacité Énergétique",
+      "short": "Solutions pour réduire votre facture énergétique et votre empreinte carbone.",
+      "details": "Optimisation des équipements, isolation, éclairage LED, gestion intelligente de l'énergie et solutions domotiques."
+    },
+    "en": {
+      "title": "Energy Efficiency",
+      "short": "Solutions to reduce your energy bill and carbon footprint.",
+      "details": "Equipment optimization, insulation, LED lighting, smart energy management and home automation solutions."
+    },
+    "ar": {
+      "title": "كفاءة الطاقة",
+      "short": "حلول لتقليل فاتورة الطاقة والبصمة الكربونية.",
+      "details": "تحسين المعدات، العزل، إضاءة LED، الإدارة الذكية للطاقة وحلول المنزل الذكي."
+    }
+  },
+  {
+    "id": "chauffe-eau",
+    "category": "energy",
+    "icon": "thermometer",
+    "fr": {
+      "title": "Chauffe-Eau Solaires",
+      "short": "Installation et maintenance de chauffe-eau solaires individuels et collectifs.",
+      "details": "Solutions de production d'eau chaude sanitaire par énergie solaire pour maisons, immeubles et établissements professionnels."
+    },
+    "en": {
+      "title": "Solar Water Heaters",
+      "short": "Installation and maintenance of individual and collective solar water heaters.",
+      "details": "Domestic hot water production solutions using solar energy for homes, buildings and professional establishments."
+    },
+    "ar": {
+      "title": "سخانات المياه الشمسية",
+      "short": "تركيب وصيانة سخانات المياه الشمسية الفردية والجماعية.",
+      "details": "حلول إنتاج الماء الساخن المنزلي باستخدام الطاقة الشمسية للمنازل والمباني والمؤسسات المهنية."
+    }
+  }
+]

@@ -1,0 +1,128 @@
+backend:
+  name: git-gateway
+  branch: main
+
+local_backend: true
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: blog
+    label: "Blog"
+    folder: src/content/blog/fr
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Titre", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Date", name: "pubDate", widget: "datetime" }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Langue", name: "lang", widget: "select", options: ["fr", "en", "ar"] }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Contenu", name: "body", widget: "markdown" }
+
+  - name: blog_en
+    label: "Blog (English)"
+    folder: src/content/blog/en
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Date", name: "pubDate", widget: "datetime" }
+      - { label: "Tags", name: "tags", widget: "list", required: false }
+      - { label: "Language", name: "lang", widget: "select", options: ["fr", "en", "ar"] }
+      - { label: "Image", name: "image", widget: "image", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: blog_ar
+    label: "المدونة (العربية)"
+    folder: src/content/blog/ar
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "العنوان", name: "title", widget: "string" }
+      - { label: "الوصف", name: "description", widget: "text" }
+      - { label: "التاريخ", name: "pubDate", widget: "datetime" }
+      - { label: "الوسوم", name: "tags", widget: "list", required: false }
+      - { label: "اللغة", name: "lang", widget: "select", options: ["fr", "en", "ar"] }
+      - { label: "الصورة", name: "image", widget: "image", required: false }
+      - { label: "المحتوى", name: "body", widget: "markdown" }
+
+  - name: projects
+    label: "Projets"
+    folder: src/data
+    create: false
+    files:
+      - label: "Liste des projets"
+        name: "projects"
+        file: "src/data/projects.json"
+        fields:
+          - label: "Projets"
+            name: "projects"
+            widget: "list"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Catégorie", name: "category", widget: "select", options: ["it", "energy"] }
+              - { label: "Image", name: "image", widget: "image", required: false }
+              - { label: "Tags", name: "tags", widget: "list", required: false }
+              - { label: "Lien", name: "link", widget: "string", required: false }
+              - label: "Français"
+                name: "fr"
+                widget: "object"
+                fields:
+                  - { label: "Titre", name: "title", widget: "string" }
+                  - { label: "Description", name: "description", widget: "text" }
+                  - { label: "Technologies", name: "tech", widget: "string" }
+              - label: "English"
+                name: "en"
+                widget: "object"
+                fields:
+                  - { label: "Title", name: "title", widget: "string" }
+                  - { label: "Description", name: "description", widget: "text" }
+                  - { label: "Technologies", name: "tech", widget: "string" }
+              - label: "العربية"
+                name: "ar"
+                widget: "object"
+                fields:
+                  - { label: "العنوان", name: "title", widget: "string" }
+                  - { label: "الوصف", name: "description", widget: "text" }
+                  - { label: "التقنيات", name: "tech", widget: "string" }
+
+  - name: testimonials
+    label: "Témoignages"
+    folder: src/data
+    create: false
+    files:
+      - label: "Liste des témoignages"
+        name: "testimonials"
+        file: "src/data/testimonials.json"
+        fields:
+          - label: "Témoignages"
+            name: "testimonials"
+            widget: "list"
+            fields:
+              - { label: "ID", name: "id", widget: "string" }
+              - { label: "Note", name: "rating", widget: "number", min: 1, max: 5 }
+              - label: "Français"
+                name: "fr"
+                widget: "object"
+                fields:
+                  - { label: "Nom", name: "name", widget: "string" }
+                  - { label: "Rôle", name: "role", widget: "string" }
+                  - { label: "Texte", name: "text", widget: "text" }
+              - label: "English"
+                name: "en"
+                widget: "object"
+                fields:
+                  - { label: "Name", name: "name", widget: "string" }
+                  - { label: "Role", name: "role", widget: "string" }
+                  - { label: "Text", name: "text", widget: "text" }
+              - label: "العربية"
+                name: "ar"
+                widget: "object"
+                fields:
+                  - { label: "الاسم", name: "name", widget: "string" }
+                  - { label: "الدور", name: "role", widget: "string" }
+                  - { label: "النص", name: "text", widget: "text" }

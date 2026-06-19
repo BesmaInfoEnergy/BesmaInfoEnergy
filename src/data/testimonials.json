@@ -1,0 +1,59 @@
+[
+  {
+    "id": "client-1",
+    "rating": 5,
+    "fr": {
+      "name": "Ahmed K.",
+      "role": "Dirigeant d'entreprise",
+      "text": "Un professionnel à l'écoute et très compétent. L'installation solaire a dépassé mes attentes. Je recommande vivement."
+    },
+    "en": {
+      "name": "Ahmed K.",
+      "role": "Company Director",
+      "text": "A professional who listens and is very competent. The solar installation exceeded my expectations. Highly recommended."
+    },
+    "ar": {
+      "name": "أحمد ك.",
+      "role": "مدير شركة",
+      "text": "محترف يستمع ويكفء للغاية. تركيب الطاقة الشمسية تجاوز توقعاتي. أوصي به بشدة."
+    }
+  },
+  {
+    "id": "client-2",
+    "rating": 5,
+    "fr": {
+      "name": "Sarah M.",
+      "role": "Responsable marketing",
+      "text": "Notre nouveau site web a considérablement amélioré notre présence en ligne. Travail soigné et livré dans les délais."
+    },
+    "en": {
+      "name": "Sarah M.",
+      "role": "Marketing Manager",
+      "text": "Our new website has significantly improved our online presence. Careful work delivered on time."
+    },
+    "ar": {
+      "name": "سارة م.",
+      "role": "مديرة تسويق",
+      "text": "موقعنا الجديد حسن بشكل كبير وجودنا على الإنترنت. عمل دقيق وتم التسليم في الوقت المحدد."
+    }
+  },
+  {
+    "id": "client-3",
+    "rating": 5,
+    "fr": {
+      "name": "Karim B.",
+      "role": "Particulier",
+      "text": "Intervention rapide pour dépanner mon PC. Le problème a été résolu en moins d'une heure. Merci pour le professionnalisme."
+    },
+    "en": {
+      "name": "Karim B.",
+      "role": "Individual",
+      "text": "Quick intervention to fix my PC. The problem was resolved in less than an hour. Thanks for the professionalism."
+    },
+    "ar": {
+      "name": "كريم ب.",
+      "role": "فرد",
+      "text": "تدخل سريع لإصلاح جهاز الكمبيوتر الخاص بي. تم حل المشكلة في أقل من ساعة. شكراً على الاحترافية."
+    }
+  }
+]

@@ -1,0 +1,38 @@
+---
+const { service, lang, t, contactUrl = "/contact" } = Astro.props;
+const content = service[lang] || service.fr;
+
+const icons = {
+  code: '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>',
+  wrench: '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.42 15.17l-7.3 7.3a2 2 0 01-2.83-2.83l7.3-7.3m0 0l4.95-4.95a6.5 6.5 0 019.19-9.19l-4.95 4.95a2 2 0 01-2.83 2.83l-4.24 4.24a2 2 0 01-2.83 2.83l-4.24 4.24a2 2 0 01-2.83-2.83l4.24-4.24" /></svg>',
+  globe: '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" /></svg>',
+  shield: '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>',
+  sun: '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>',
+  "bar-chart": '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>',
+  zap: '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>',
+  thermometer: '<svg class="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>',
+};
+---
+
+<article class="bg-white rounded-2xl border border-neutral-200 p-6 hover:shadow-lg hover:border-primary-200 transition-all" data-aos="fade-up">
+  <div class={`flex ${lang === "ar" ? "flex-row-reverse" : ""} gap-4`}>
+    <div class={`shrink-0 w-14 h-14 ${service.category === "it" ? "bg-primary-50 text-primary-600" : "bg-secondary-50 text-secondary-600"} rounded-xl flex items-center justify-center`}>
+      <span set:html={icons[service.icon] || icons.code} />
+    </div>
+    <div class={`flex-1 ${lang === "ar" ? "text-right" : ""}`}>
+      <h3 class="text-xl font-semibold text-neutral-900 mb-2">{content.title}</h3>
+      <p class="text-neutral-600 mb-3">{content.short}</p>
+      <details class="group">
+        <summary class="text-primary-600 font-medium text-sm cursor-pointer hover:text-primary-700 list-none flex items-center gap-1">
+          <span>En savoir plus</span>
+          <svg class="w-4 h-4 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+        </summary>
+        <p class="mt-3 text-neutral-600 text-sm leading-relaxed">{content.details}</p>
+      </details>
+      <a href={contactUrl} class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:text-primary-700">
+        {t("services.cta")}
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={lang === "ar" ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} /></svg>
+      </a>
+    </div>
+  </div>
+</article>

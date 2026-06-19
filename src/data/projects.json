@@ -1,0 +1,90 @@
+[
+  {
+    "id": "site-vitrine-entreprise",
+    "category": "it",
+    "image": "/images/projects/placeholder-web.jpg",
+    "tags": ["React", "Tailwind CSS", "Vercel"],
+    "link": null,
+    "fr": {
+      "title": "Site vitrine pour entreprise",
+      "description": "Création d'un site web professionnel avec catalogue de produits et formulaire de contact.",
+      "tech": "React, Tailwind CSS, Vercel"
+    },
+    "en": {
+      "title": "Corporate website",
+      "description": "Creation of a professional website with product catalog and contact form.",
+      "tech": "React, Tailwind CSS, Vercel"
+    },
+    "ar": {
+      "title": "موقع تعريفي لشركة",
+      "description": "إنشاء موقع ويب احترافي مع كتالوج المنتجات ونموذج اتصال.",
+      "tech": "React, Tailwind CSS, Vercel"
+    }
+  },
+  {
+    "id": "app-mobile-service",
+    "category": "it",
+    "image": "/images/projects/placeholder-mobile.jpg",
+    "tags": ["Flutter", "Firebase"],
+    "link": null,
+    "fr": {
+      "title": "Application mobile de service",
+      "description": "Développement d'une application mobile de mise en relation prestataires/clients.",
+      "tech": "Flutter, Firebase"
+    },
+    "en": {
+      "title": "Mobile service app",
+      "description": "Development of a mobile app connecting service providers with clients.",
+      "tech": "Flutter, Firebase"
+    },
+    "ar": {
+      "title": "تطبيق جوال للخدمات",
+      "description": "تطوير تطبيق جوال للربط بين مقدمي الخدمات والعملاء.",
+      "tech": "Flutter, Firebase"
+    }
+  },
+  {
+    "id": "installation-solaire",
+    "category": "energy",
+    "image": "/images/projects/placeholder-solar.jpg",
+    "tags": ["Photovoltaïque", "5kWc", "Autoconsommation"],
+    "link": null,
+    "fr": {
+      "title": "Installation solaire 5kWc",
+      "description": "Installation de panneaux solaires pour une villa avec système d'autoconsommation et batterie de stockage.",
+      "tech": "Panneaux monocristallins, Onduleur Huawei, Batterie Lithium"
+    },
+    "en": {
+      "title": "5kWp Solar Installation",
+      "description": "Solar panel installation for a villa with self-consumption system and storage battery.",
+      "tech": "Monocrystalline panels, Huawei inverter, Lithium battery"
+    },
+    "ar": {
+      "title": "تركيب شمسي 5 كيلوواط",
+      "description": "تركيب ألواح شمسية لفيلا مع نظام استهلاك ذاتي وبطارية تخزين.",
+      "tech": "ألواح أحادية البلورة، عاكس Huawei، بطارية ليثيوم"
+    }
+  },
+  {
+    "id": "audit-energetique-industrie",
+    "category": "energy",
+    "image": "/images/projects/placeholder-audit.jpg",
+    "tags": ["Audit", "Industrie", "Économies d'énergie"],
+    "link": null,
+    "fr": {
+      "title": "Audit énergétique industriel",
+      "description": "Audit complet d'une unité de production avec recommandations ayant permis 25% d'économies d'énergie.",
+      "tech": "Analyse thermique, Compteurs intelligents, Logiciel de simulation"
+    },
+    "en": {
+      "title": "Industrial energy audit",
+      "description": "Complete audit of a production unit with recommendations achieving 25% energy savings.",
+      "tech": "Thermal analysis, Smart meters, Simulation software"
+    },
+    "ar": {
+      "title": "تدقيق طاقوي صناعي",
+      "description": "تدقيق كامل لوحدة إنتاج مع توصيات حققت 25% من توفير الطاقة.",
+      "tech": "تحليل حراري، عدادات ذكية، برنامج محاكاة"
+    }
+  }
+]

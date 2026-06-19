@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getLangFromUrl, useTranslations, useTranslatedPath } from "../../i18n/utils";
+import { getCollection } from "astro:content";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+const allPosts = await getCollection("blog", ({ data }) => data.lang === lang);
+allPosts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout
+  title={t("blog.title")}
+  description={t("blog.subtitle")}
+  lang={lang}
+  dir={lang === "ar" ? "rtl" : "ltr"}
+>
+  <section class="py-20 md:py-28 bg-gradient-to-b from-primary-900 to-primary-700 text-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{t("blog.title")}</h1>
+      <p class="text-xl text-neutral-200">{t("blog.subtitle")}</p>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {allPosts.length > 0 ? (
+        <div class="space-y-8">
+          {allPosts.map((post) => (
+            <article key={post.id} class="bg-white border border-neutral-200 rounded-2xl p-6 hover:shadow-lg transition-all" data-aos="fade-up">
+              {post.data.image && (
+                <img src={post.data.image} alt={post.data.title} class="w-full h-48 object-cover rounded-xl mb-4" loading="lazy" />
+              )}
+              <div class="flex flex-wrap gap-2 mb-3">
+                {post.data.tags?.map((tag) => (
+                  <span class="text-xs bg-neutral-100 text-neutral-600 px-2 py-1 rounded">{tag}</span>
+                ))}
+              </div>
+              <h2 class="text-2xl font-semibold text-neutral-900 mb-2">{post.data.title}</h2>
+              <p class="text-neutral-600 mb-4">{post.data.description}</p>
+              <div class="flex items-center justify-between">
+                <time class="text-sm text-neutral-500">{post.data.pubDate.toLocaleDateString(lang === "ar" ? "ar-DZ" : lang === "en" ? "en-US" : "fr-FR")}</time>
+                <a href={translatePath(`blog/${post.id}`)} class="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 font-medium text-sm">
+                  {t("blog.readMore")}
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={lang === "ar" ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} /></svg>
+                </a>
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-20" data-aos="fade-up">
+          <p class="text-neutral-500 text-lg">Aucun article pour le moment. Revenez bientôt !</p>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

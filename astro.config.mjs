@@ -1,4 +1,5 @@
 import { defineConfig } from "astro/config";
+import sitemap from "@astrojs/sitemap"; // ← Ajoutez cette ligne
 
 export default defineConfig({
   site: "https://besma-info-energy.vercel.app",
@@ -16,4 +17,5 @@ export default defineConfig({
       ar: "fr",
     },
   },
+  integrations: [sitemap()], // ← Ajoutez cette ligne
 });

@@ -1,12 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="32" y2="32">
-      <stop offset="0%" stop-color="#2563eb"/>
-      <stop offset="100%" stop-color="#1e40af"/>
-    </linearGradient>
-  </defs>
-  <rect width="32" height="32" rx="6" fill="url(#bg)"/>
-  <path d="M16 4L6 9l10 5 10-5-10-5z" fill="#10b981"/>
-  <path d="M6 17l10 5 10-5" fill="#10b981" opacity="0.7"/>
-  <path d="M6 12l10 5 10-5" fill="#10b981" opacity="0.5"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <circle cx="50" cy="50" r="48" fill="#003580"/>
+
+  <g transform="translate(50, 50)">
+    <text y="-8" font-family="Arial, sans-serif" font-weight="bold" font-size="34" text-anchor="middle" dominant-baseline="middle" fill="#28a745">
+      BIE
+    </text>
+
+    <line x1="-25" y1="10" x2="25" y2="10" stroke="#ffc107" stroke-width="3" stroke-linecap="round"/>
+
+    <text y="25" font-family="Arial, sans-serif" font-weight="bold" font-size="9" text-anchor="middle" dominant-baseline="middle" fill="#ffffff">
+      IT &amp; Energy
+    </text>
+  </g>
 </svg>

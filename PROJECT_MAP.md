@@ -25,18 +25,20 @@
 
 | URL | Fichier src/pages/ | Composants clés |
 |-----|-------------------|-----------------|
-| `/` | `index.astro` | HeroSection, ServiceCard, ProjectCard, TestimonialCard, CTASection |
-| `/about` | `about.astro` | Bio, Skills grid, Certifications |
-| `/services` | `services.astro` | ServiceCard (filtre IT/Énergie) |
-| `/portfolio` | `portfolio.astro` | ProjectCard grid |
-| `/portfolio/:slug` | `portfolio/[slug].astro` | Project detail |
-| `/blog` | `blog/index.astro` | Blog posts list (filtré par langue) |
-| `/blog/:slug` | `blog/[...slug].astro` | Blog post detail + MDX content |
-| `/testimonials` | `testimonials.astro` | TestimonialCard grid |
-| `/contact` | `contact.astro` | ContactForm + coordonnées + réseaux |
-| `/faq` | `faq.astro` | FAQItem accordéon |
-| `/legal` | `legal.astro` | Mentions légales |
-| `/privacy` | `privacy.astro` | Politique de confidentialité |
+| URL | Fichier src/pages/ (ou public/) | Composants clés (depuis src/components/pages/) |
+|-----|-------------------|-----------------|
+| `/` | `index.astro` + `en/index.astro` + `ar/index.astro` | HeroSection, ServiceCard, ProjectCard, TestimonialCard, CTASection |
+| `/about` | `about.astro` + `en/about.astro` + `ar/about.astro` | AboutPage (bio, skills, experience, background, official links) |
+| `/services` | `services.astro` + `en/services.astro` + `ar/services.astro` | ServiceCard (filtre IT/Énergie) |
+| `/portfolio` | `portfolio.astro` + `en/portfolio.astro` + `ar/portfolio.astro` | ProjectCard grid |
+| `/portfolio/:slug` | `portfolio/[slug].astro` + `en/portfolio/[slug].astro` + `ar/portfolio/[slug].astro` | Project detail |
+| `/blog` | `blog/index.astro` + `en/blog/index.astro` + `ar/blog/index.astro` | Blog posts list (filtré par langue) |
+| `/blog/:slug` | `blog/[...slug].astro` + `en/blog/[...slug].astro` + `ar/blog/[...slug].astro` | Blog post detail + MDX content |
+| `/testimonials` | `testimonials.astro` + `en/testimonials.astro` + `ar/testimonials.astro` | TestimonialCard grid |
+| `/contact` | `contact.astro` + `en/contact.astro` + `ar/contact.astro` | ContactPage (form + coordonnées + réseaux + localisation) |
+| `/faq` | `faq.astro` + `en/faq.astro` + `ar/faq.astro` | FAQItem accordéon |
+| `/legal` | `legal.astro` + `en/legal.astro` + `ar/legal.astro` | LegalPage (9 sections) |
+| `/privacy` | `privacy.astro` + `en/privacy.astro` + `ar/privacy.astro` | PrivacyPage (5 sections) |
 | `/admin/` | `public/admin/index.html` | Decap CMS interface |
 
 ## DATA_SCHEMA
@@ -134,17 +136,27 @@ npm run preview   # Preview du build
 ## ORPHANS & PENDING
 
 - [ ] **Formspree ID** : Remplacer `YOUR_FORM_ID` dans ContactForm.astro
-- [ ] **Images réelles** : Remplacer les placeholders dans `public/images/projects/`
-- [ ] **Logo** : Rafiner le favicon.svg en logo complet
+- [ ] **Images projets** : Ajouter des images réelles dans `public/images/projects/`
+- [ ] **Logo/favicon** : Rafiner le favicon.svg en logo complet
 - [ ] **Dark Mode** : Implémenter le toggle thème (classe `dark` sur `<html>`)
-- [ ] **Réseaux sociaux** : Mettre à jour les liens LinkedIn, GitHub dans le footer et page contact
-- [ ] **Déploiement** : Configurer le dépôt GitHub et connecter à Vercel
 - [ ] **Domain** : Acheter un nom de domaine (ex: besmainfoenergy.dz)
 - [ ] **Decap CMS** : Activer Git Gateway sur le repo
-- [ ] **Contenu réel** : Rédiger les textes définitifs, ajouter photos réelles
+- [ ] **Google My Business** : Créer une fiche établissement
+- [ ] **Google Search Console** : Soumettre le sitemap
+- [ ] **Contenu blog** : Rédiger et publier des articles réels
 
 ## CHANGELOG
 
 | Date | Modification | Fichiers modifiés |
 |-----|-------------|-------------------|
-| 2026-06-18 | Correction bug déploiement Vercel : `@astrojs/tailwind` incompatible avec Astro 6. Remplacé par PostCSS + Tailwind v3 direct. | `astro.config.mjs`, `postcss.config.cjs` (nouveau), `package.json` |
+| 2026-06-18 | Migration PostCSS : `@astrojs/tailwind` → PostCSS + tailwindcss@3 | `astro.config.mjs`, `postcss.config.cjs`, `package.json` |
+| 2026-06-19 | Architecture pages locales : création `src/components/pages/` (12 composants) + pages wrapper dans `src/pages/en/` et `src/pages/ar/` + fix BaseLayout lang prop | multiples |
+| 2026-06-19 | Fix LanguageSwitcher : `useTranslatedPath` corrigé, trailing slashes ajoutés partout | `LanguageSwitcher.astro`, `utils.ts` |
+| 2026-06-19 | Fix AOS pointer-events : suppression `[data-aos]{pointer-events:none}` | `global.css` |
+| 2026-06-19 | Contenu About : skills IT/énergie, expérience 27+ ans SONELGAZ, background ESI/CERI, liens officiels ANAE/Moukawil | `ui.ts`, `AboutPage.astro` |
+| 2026-06-19 | Contenu Légal : 9 sections complètes (FR/EN/AR) avec lois algériennes | `ui.ts`, `LegalPage.astro` |
+| 2026-06-19 | Contenu Privacy : 5 sections complètes (FR/EN/AR) | `ui.ts`, `PrivacyPage.astro` |
+| 2026-06-19 | Contact : infos mises à jour, réseaux sociaux (Facebook, LinkedIn, GitHub), localisation Khenchela | `ContactPage.astro`, `Footer.astro` |
+| 2026-06-19 | Images : logo.jpg, hero-banner.png, anae-logo.png, moukawil-logo.png | `public/images/` |
+| 2026-06-19 | Header compact : nav réduite, brand text caché sur md, langue cachée sur md | `Header.astro` |
+| 2026-06-20 | Placeholder éditeur → BesmaInfoEnergy (FR/EN/AR) | `ui.ts` |

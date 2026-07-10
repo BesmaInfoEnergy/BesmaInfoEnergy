@@ -86,5 +86,27 @@
       "description": "تدقيق كامل لوحدة إنتاج مع توصيات حققت 25% من توفير الطاقة.",
       "tech": "تحليل حراري، عدادات ذكية، برنامج محاكاة"
     }
+  },
+  {
+    "id": "dzsalat",
+    "category": "it",
+    "image": "/images/projects/dzsalat.jpg",
+    "tags": ["Android", "Adhan", "Prière", "Algérie"],
+    "link": "https://github.com/BesmaInfoEnergy/DZ-App-Store/raw/main/DZSalat/DZSalat.apk",
+    "fr": {
+      "title": "DZSalat — Application de Prière & Adhan",
+      "description": "Application Android offrant des horaires de prière précis selon les méthodes locales algériennes, avec Adhan automatique, Tasbih numérique, mode silencieux automatique pendant la prière, boussole Qibla et support multilingue (arabe, français, anglais). Sans publicité.",
+      "tech": "Flutter, API Adhan, Services de localisation"
+    },
+    "en": {
+      "title": "DZSalat — Prayer & Adhan App",
+      "description": "Android app providing accurate prayer times according to local Algerian methods, with automatic Adhan, digital Tasbih, auto silent mode during prayer, Qibla compass, and multilingual support (Arabic, French, English). No ads.",
+      "tech": "Flutter, Adhan API, Location Services"
+    },
+    "ar": {
+      "title": "DZSalat — تطبيق الصلاة والأذان",
+      "description": "تطبيق أندرويد يوفر أوقات صلاة دقيقة وفقًا للطرق المحلية الجزائرية، مع أذان تلقائي، تسبيح رقمي، وضع صامت تلقائي أثناء الصلاة، بوصلة القبلة، ودعم متعدد اللغات (العربية، الفرنسية، الإنجليزية). بدون إعلانات.",
+      "tech": "Flutter, API الأذان, خدمات الموقع"
+    }
   }
 ]

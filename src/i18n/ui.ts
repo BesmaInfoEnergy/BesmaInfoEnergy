@@ -93,7 +93,8 @@ export const ui = {
     "services.energy.title": "Services Énergétiques",
     "services.energy.desc":
       "Solutions solaires photovoltaïques, audits énergétiques, efficacité énergétique",
-    "services.cta": "Demander un devis pour ce service",
+    "services.learnMore": "En savoir plus",
+    "services.cta": "Démarrer mon projet",
     "portfolio.title": "Mes Réalisations",
     "portfolio.subtitle": "Projets récents en informatique et énergie",
     "portfolio.tech": "Technologies utilisées",
@@ -265,7 +266,8 @@ export const ui = {
     "services.energy.title": "Energy Services",
     "services.energy.desc":
       "Solar photovoltaic solutions, energy audits, energy efficiency",
-    "services.cta": "Request a quote for this service",
+    "services.learnMore": "Learn more",
+    "services.cta": "Start my project",
     "portfolio.title": "My Portfolio",
     "portfolio.subtitle": "Recent projects in IT and energy",
     "portfolio.tech": "Technologies used",
@@ -431,7 +433,8 @@ export const ui = {
     "services.energy.title": "خدمات الطاقة",
     "services.energy.desc":
       "حلول الطاقة الشمسية الكهروضوئية، التدقيق الطاقوي، كفاءة الطاقة",
-    "services.cta": "طلب عرض سعر لهذه الخدمة",
+    "services.learnMore": "اعرف المزيد",
+    "services.cta": "ابدأ مشروعي",
     "portfolio.title": "إنجازاتي",
     "portfolio.subtitle": "مشاريع حديثة في المعلوماتية والطاقة",
     "portfolio.tech": "التقنيات المستخدمة",

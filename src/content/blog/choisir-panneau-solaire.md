@@ -2,6 +2,7 @@
 title: "Comment choisir son panneau solaire en Algérie ?"
 description: "Guide complet pour bien choisir vos panneaux solaires photovoltaïques adaptés au climat algérien."
 pubDate: 2026-06-15
+image: "/images/hero-banner.png"
 tags: ["solaire", "guide", "énergie"]
 lang: fr
 ---

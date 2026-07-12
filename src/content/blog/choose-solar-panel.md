@@ -2,6 +2,7 @@
 title: "How to Choose Your Solar Panel in Algeria?"
 description: "Complete guide to choosing the right photovoltaic solar panels for the Algerian climate."
 pubDate: 2026-06-15
+image: "/images/hero-banner.png"
 tags: ["solar", "guide", "energy"]
 lang: en
 ---

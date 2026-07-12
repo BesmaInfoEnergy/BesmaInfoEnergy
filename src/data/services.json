@@ -3,20 +3,21 @@
     "id": "dev-web",
     "category": "it",
     "icon": "code",
+    "cta": "Démarrer mon projet",
     "fr": {
       "title": "Développement Web & Mobile",
-      "short": "Sites vitrines, applications web, e-commerce et apps mobiles sur mesure.",
-      "details": "De la conception à la mise en production, je réalise des solutions digitales performantes, responsives et optimisées SEO. Technologies : React, Next.js, Astro, Flutter, Node.js."
+      "short": "Sites vitrines, e-commerce et apps sur mesure pour booster votre activité en Algérie.",
+      "details": "<ul class=\"space-y-4\"><li><strong>Pack Vitrine Express</strong> — Idéal pour les cliniques, écoles privées et artisans à Khenchela et partout en Algérie. Un site moderne, rapide et optimisé sur mobile pour présenter vos services et attirer plus de clients.</li><li><strong>Pack E-Commerce Algérie</strong> — Une boutique en ligne complète avec gestion des commandes, catalogue produits illimité et optimisation pour le Paiement à la Livraison (COD), le mode de paiement préféré des Algériens.</li><li><strong>Applications Sur-Mesure</strong> — Systèmes de gestion de stock, portails web complexes ou apps mobiles développées avec Flutter/React. Code source hébergé sur GitHub avec livraison continue.</li></ul>"
     },
     "en": {
       "title": "Web & Mobile Development",
-      "short": "Showcase sites, web apps, e-commerce and custom mobile applications.",
-      "details": "From design to production, I build high-performance, responsive and SEO-optimized digital solutions. Technologies: React, Next.js, Astro, Flutter, Node.js."
+      "short": "Showcase sites, e-commerce and custom apps to boost your business in Algeria.",
+      "details": "<ul class=\"space-y-4\"><li><strong>Vitrine Express Pack</strong> — Ideal for clinics, private schools and craftsmen in Khenchela and across Algeria. A modern, fast and mobile-optimized website to showcase your services and attract more customers.</li><li><strong>E-Commerce Algeria Pack</strong> — A complete online store with order management, unlimited product catalog and optimization for Cash on Delivery (COD), the preferred payment method in Algeria.</li><li><strong>Custom Applications</strong> — Inventory management systems, complex web portals or mobile apps built with Flutter/React. Source code hosted on GitHub with continuous delivery.</li></ul>"
     },
     "ar": {
       "title": "تطوير الويب والتطبيقات",
-      "short": "مواقع تعريفية، تطبيقات ويب، تجارة إلكترونية وتطبيقات جوال مخصصة.",
-      "details": "من التصميم إلى الإنتاج، أقوم ببناء حلول رقمية عالية الأداء ومتوافقة مع الهواتف ومحسّنة لمحركات البحث."
+      "short": "مواقع تعريفية، تجارة إلكترونية وتطبيقات مخصصة لتعزيز نشاطك التجاري في الجزائر.",
+      "details": "<ul class=\"space-y-4\"><li><strong>باقة Vitrine Express</strong> — مثالية للعيادات والمدارس الخاصة والحرفيين في خنشلة وفي جميع أنحاء الجزائر. موقع حديث وسريع ومحسّن للهواتف المحمولة لعرض خدماتك وجذب المزيد من العملاء.</li><li><strong>باقة التجارة الإلكترونية الجزائر</strong> — متجر إلكتروني متكامل مع إدارة الطلبات، كتالوج منتجات غير محدود، وتحسين للدفع عند الاستلام (COD)، طريقة الدفع المفضلة للجزائريين.</li><li><strong>التطبيقات المخصصة</strong> — أنظمة إدارة المخزون، بوابات ويب معقدة أو تطبيقات جوال مطورة باستخدام Flutter/React. كود مصدر مستضاف على GitHub مع تسليم مستمر.</li></ul>"
     }
   },
   {

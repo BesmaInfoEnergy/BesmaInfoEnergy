@@ -35,9 +35,7 @@ const data = post.data;
           {data.pubDate.toLocaleDateString(lang === "ar" ? "ar-DZ" : lang === "en" ? "en-US" : "fr-FR")}
         </time>
 
-        {data.image && (
-          <img src={data.image} alt={data.title} class="w-full rounded-2xl mb-8" loading="lazy" />
-        )}
+        <img src={data.image || "/images/hero-banner.png"} alt={data.title} class="w-full rounded-2xl mb-8" loading="lazy" />
 
         <div class="prose prose-neutral max-w-none">
           <slot />

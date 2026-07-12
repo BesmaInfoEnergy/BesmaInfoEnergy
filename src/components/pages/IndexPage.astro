@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import HeroSection from "../HeroSection.astro";
 import CTASection from "../CTASection.astro";
 import ServiceCard from "../ServiceCard.astro";
+import WebDevPacks from "../WebDevPacks.astro";
 import ProjectCard from "../ProjectCard.astro";
 import TestimonialCard from "../TestimonialCard.astro";
 import { getLangFromUrl, useTranslations, useTranslatedPath } from "../../i18n/utils";
@@ -46,6 +47,7 @@ const translatePath = useTranslatedPath(lang);
             <ServiceCard key={service.id} service={service} lang={lang} t={t} contactUrl={translatePath("contact")} />
           ))}
         </div>
+        <WebDevPacks lang={lang} t={t} contactUrl={translatePath("contact")} />
       </div>
       <div>
         <h3 class="text-2xl font-bold text-secondary-700 mb-6 flex items-center gap-3">

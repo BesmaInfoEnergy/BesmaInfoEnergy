@@ -2,6 +2,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import CTASection from "../CTASection.astro";
 import ServiceCard from "../ServiceCard.astro";
+import WebDevPacks from "../WebDevPacks.astro";
 import { getLangFromUrl, useTranslations, useTranslatedPath } from "../../i18n/utils";
 import services from "../../data/services.json";
 
@@ -36,6 +37,7 @@ const translatePath = useTranslatedPath(lang);
             <ServiceCard key={service.id} service={service} lang={lang} t={t} contactUrl={translatePath("contact")} />
           ))}
         </div>
+        <WebDevPacks lang={lang} t={t} contactUrl={translatePath("contact")} />
       </div>
 
       <div>

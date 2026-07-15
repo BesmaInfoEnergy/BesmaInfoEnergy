@@ -3,7 +3,7 @@ import sitemap from "@astrojs/sitemap"; // ← Ajoutez cette ligne
 
 export default defineConfig({
   site: "https://besma-info-energy.vercel.app",
-  trailingSlash: "always",
+  trailingSlash: "never",
   i18n: {
     defaultLocale: "fr",
     locales: ["fr", "en", "ar"],

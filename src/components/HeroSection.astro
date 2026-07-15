@@ -5,7 +5,7 @@ const { lang, title, subtitle, ctaText, ctaLink, bannerSrc } = Astro.props;
 <section class="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-700 to-primary-600 text-white">
   {bannerSrc && (
     <div class="absolute inset-0">
-      <img src={bannerSrc} alt="" class="w-full h-full object-cover" />
+      <img src={bannerSrc} alt="" aria-hidden="true" class="w-full h-full object-cover" />
       <div class="absolute inset-0 bg-gradient-to-br from-primary-900/85 via-primary-700/75 to-primary-600/65"></div>
     </div>
   )}

@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BesmaInfoEnergy — Administration</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd', 400: '#60a5fa', 500: '#3b82f6', 600: '#1e40af', 700: '#1e3a8a', 800: '#1e3a5f', 900: '#0f172a' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #0f172a; }
+
+    /* ---------- LOGIN ---------- */
+    #loginScreen {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+    }
+    #loginScreen.hidden { display: none; }
+    #loginCard {
+      background: rgba(255,255,255,0.05); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 100%; max-width: 420px; padding: 2.5rem; border-radius: 1.5rem;
+    }
+    #loginCard .logo { text-align: center; margin-bottom: 2rem; }
+    #loginCard .logo h1 { color: #fff; font-size: 1.5rem; font-weight: 700; }
+    #loginCard .logo p { color: #94a3b8; font-size: 0.875rem; }
+    #loginCard input { width: 100%; padding: 0.75rem 1rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 0.75rem; color: #fff; font-size: 1rem; outline: none; transition: 0.2s; }
+    #loginCard input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.3); }
+    #loginCard input::placeholder { color: #64748b; }
+    #loginCard button { width: 100%; padding: 0.75rem; border-radius: 0.75rem; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.2s; }
+    #loginError { color: #f87171; font-size: 0.875rem; text-align: center; min-height: 1.5rem; }
+    #bruteForceMsg { color: #ef4444; font-size: 0.875rem; text-align: center; font-weight: 600; }
+
+    /* ---------- LAYOUT ---------- */
+    #app { display: none; height: 100vh; overflow: hidden; }
+    #app.active { display: flex; }
+
+    #sidebar {
+      width: 260px; min-width: 260px; height: 100vh; overflow-y: auto;
+      background: #1a2332; border-right: 1px solid rgba(255,255,255,0.06);
+      display: flex; flex-direction: column;
+    }
+    #sidebar .brand { padding: 1.25rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    #sidebar .brand h2 { color: #fff; font-size: 1.125rem; font-weight: 700; }
+    #sidebar .brand p { color: #64748b; font-size: 0.75rem; }
+    #sidebar nav { flex: 1; padding: 0.75rem; }
+    #sidebar nav button {
+      display: flex; align-items: center; gap: 0.75rem; width: 100%;
+      padding: 0.625rem 0.875rem; border-radius: 0.75rem; border: none;
+      background: transparent; color: #94a3b8; font-size: 0.875rem; font-weight: 500;
+      cursor: pointer; transition: 0.15s; text-align: left; margin-bottom: 2px;
+    }
+    #sidebar nav button:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+    #sidebar nav button.active { background: rgba(59,130,246,0.15); color: #60a5fa; }
+    #sidebar nav button svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
+    #sidebar .sidebar-footer { padding: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
+    #sidebar .sidebar-footer button {
+      display: flex; align-items: center; gap: 0.75rem; width: 100%;
+      padding: 0.625rem 0.875rem; border-radius: 0.75rem; border: none;
+      background: transparent; color: #94a3b8; font-size: 0.875rem; cursor: pointer; transition: 0.15s; text-align: left;
+    }
+    #sidebar .sidebar-footer button:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+    #sidebar .sidebar-footer .logout-btn { color: #f87171; }
+    #sidebar .sidebar-footer .logout-btn:hover { background: rgba(239,68,68,0.1); }
+
+    #main {
+      flex: 1; height: 100vh; overflow-y: auto;
+      background: #0f172a; padding: 1.5rem 2rem;
+    }
+    .module { display: none; }
+    .module.active { display: block; }
+    .module h1 { color: #fff; font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .module p.subtitle { color: #64748b; font-size: 0.875rem; margin-bottom: 1.5rem; }
+
+    .card { background: #1a2332; border: 1px solid rgba(255,255,255,0.06); border-radius: 1rem; padding: 1.5rem; }
+    .card h3 { color: #94a3b8; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+    .card .value { color: #fff; font-size: 1.75rem; font-weight: 700; }
+    .card .sub { color: #64748b; font-size: 0.8rem; margin-top: 0.25rem; }
+
+    .table-wrap { overflow-x: auto; }
+    table.admin-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    table.admin-table thead th { color: #64748b; font-weight: 600; text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    table.admin-table tbody td { color: #cbd5e1; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    table.admin-table tbody tr:hover { background: rgba(255,255,255,0.02); }
+    table.admin-table tbody tr.archived { opacity: 0.4; }
+    table.admin-table tbody tr.cancelled td { text-decoration: line-through; color: #64748b; }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 0.625rem 0.875rem;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0.625rem; color: #e2e8f0; font-size: 0.875rem; outline: none; transition: 0.2s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.15); }
+    .form-input::placeholder { color: #475569; }
+    .form-select option { background: #1a2332; color: #e2e8f0; }
+    .form-label { display: block; color: #94a3b8; font-size: 0.8rem; font-weight: 500; margin-bottom: 0.35rem; }
+
+    .btn { padding: 0.5rem 1.25rem; border-radius: 0.625rem; font-size: 0.875rem; font-weight: 600; border: none; cursor: pointer; transition: 0.15s; display: inline-flex; align-items: center; gap: 0.5rem; }
+    .btn-primary { background: #1e40af; color: #fff; }
+    .btn-primary:hover { background: #1e3a8a; }
+    .btn-success { background: #065f46; color: #fff; }
+    .btn-success:hover { background: #047857; }
+    .btn-warning { background: #92400e; color: #fff; }
+    .btn-warning:hover { background: #78350f; }
+    .btn-danger { background: #991b1b; color: #fff; }
+    .btn-danger:hover { background: #7f1d1d; }
+    .btn-ghost { background: transparent; color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+    .btn-sm { padding: 0.375rem 0.875rem; font-size: 0.8rem; }
+    .btn-icon { padding: 0.375rem; border-radius: 0.5rem; background: transparent; border: none; color: #94a3b8; cursor: pointer; }
+    .btn-icon:hover { background: rgba(255,255,255,0.06); color: #e2e8f0; }
+
+    #invoicePreview, #contractPreview {
+      background: #fff; color: #1e293b; padding: 2.5rem; border-radius: 1rem; margin-top: 1rem;
+    }
+    #invoicePreview table, #contractPreview table { width: 100%; border-collapse: collapse; }
+    #invoicePreview table th, #invoicePreview table td, #contractPreview table th, #contractPreview table td { padding: 0.625rem 0.75rem; border: 1px solid #e2e8f0; text-align: left; font-size: 0.875rem; }
+    #invoicePreview table th, #contractPreview table th { background: #f8fafc; font-weight: 600; }
+
+    .g12-form { background: #fff; color: #1e293b; border-radius: 1rem; padding: 2rem; max-width: 700px; }
+    .g12-form h3 { color: #1e293b; font-size: 1.125rem; font-weight: 700; text-align: center; margin-bottom: 1.5rem; }
+    .g12-form .g12-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; font-size: 0.875rem; }
+    .g12-form .g12-row.highlight { background: #fef3c7; font-weight: 700; border: 2px solid #f59e0b; margin: 0.5rem -1rem; padding: 0.75rem 1rem; border-radius: 0.5rem; }
+
+    #toast { position: fixed; bottom: 2rem; right: 2rem; z-index: 999; padding: 1rem 1.5rem; border-radius: 0.75rem; font-size: 0.875rem; font-weight: 500; transform: translateY(120%); transition: 0.3s; max-width: 360px; }
+    #toast.show { transform: translateY(0); }
+    #toast.success { background: #065f46; color: #d1fae5; }
+    #toast.error { background: #991b1b; color: #fce4ec; }
+
+    .item-row { display: grid; grid-template-columns: 1fr 80px 100px 60px; gap: 0.5rem; align-items: end; }
+
+    @media print {
+      body { background: #fff !important; }
+      #sidebar, #loginScreen, .no-print, #toast { display: none !important; }
+      #app { display: block !important; height: auto !important; overflow: visible !important; }
+      #main { padding: 0 !important; height: auto !important; overflow: visible !important; background: #fff !important; }
+      #invoicePreview, #contractPreview { box-shadow: none !important; border: none !important; border-radius: 0 !important; padding: 0.5in !important; margin: 0 !important; }
+      .module { display: none !important; }
+      .module.active { display: block !important; }
+      .card, .g12-form { box-shadow: none !important; border: 1px solid #ddd !important; }
+    }
+
+    #sidebar::-webkit-scrollbar, #main::-webkit-scrollbar { width: 4px; }
+    #sidebar::-webkit-scrollbar-track, #main::-webkit-scrollbar-track { background: transparent; }
+    #sidebar::-webkit-scrollbar-thumb, #main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 600; }
+    .badge-active { background: rgba(5,150,105,0.15); color: #6ee7b7; }
+    .badge-cancelled { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <!-- ==================== SIDEBAR ==================== -->
+  <aside id="sidebar" class="no-print">
+    <div class="brand">
+      <h2 id="sidebarBrand">BesmaInfoEnergy</h2>
+      <p>Auto-entrepreneur · Algérie</p>
+    </div>
+    <nav id="sidebarNav">
+      <button data-module="dashboard" class="active" onclick="switchModule('dashboard')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span data-i18n="dashboard">Tableau de bord</span>
+      </button>
+      <button data-module="clients" onclick="switchModule('clients')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/></svg>
+        <span data-i18n="clients">Base Clients</span>
+      </button>
+      <button data-module="invoices" onclick="switchModule('invoices')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span data-i18n="invoices">Facturation & Devis</span>
+      </button>
+      <button data-module="contracts" onclick="switchModule('contracts')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span data-i18n="contracts">Contrats</span>
+      </button>
+      <button data-module="accounting" onclick="switchModule('accounting')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+        <span data-i18n="accounting">Bilan & Fiscalité</span>
+      </button>
+      <button data-module="settings" onclick="switchModule('settings')">
+        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span data-i18n="settings">Paramètres</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button onclick="toggleLang()" class="lang-toggle" style="color:#94a3b8;font-size:0.8rem;">
+        <svg class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5h12M9 3v2m0 4l3.5 7m-9 0L6 16m0 0l-2.5 5M6 16l2.5-5m5.5 0L17 21m0 0l2.5-5M17 21l-2.5-5"/></svg>
+        <span id="langLabel">FR</span>
+      </button>
+      <button onclick="exportBackup()" style="font-size:0.8rem;">
+        <svg class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <span data-i18n="export">Exporter</span>
+      </button>
+      <button onclick="document.getElementById('importFile').click()" style="font-size:0.8rem;">
+        <svg class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+        <span data-i18n="import">Importer</span>
+      </button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importBackup(event)">
+      <button onclick="logout()" class="logout-btn" style="font-size:0.8rem;margin-top:4px;">
+        <svg class="w-5 h-5 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        <span data-i18n="logout">Déconnexion</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==================== MAIN ==================== -->
+  <main id="main">
+
+    <!-- DASHBOARD -->
+    <section id="mod-dashboard" class="module active">
+      <h1 data-i18n="dashboardTitle">Tableau de bord</h1>
+      <p class="subtitle" data-i18n="dashboardSub">Vue d'ensemble de votre activité</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="card"><h3 data-i18n="revenue">CA Encaissé</h3><div class="value"><span id="dashRevenue">0</span> DA</div></div>
+        <div class="card"><h3 data-i18n="unpaid">Documents émis</h3><div class="value"><span id="dashUnpaid">0</span></div></div>
+        <div class="card"><h3 data-i18n="taxDue">IFU Estimé</h3><div class="value"><span id="dashTax">0</span> DA</div><div class="sub" data-i18n="taxYear">Année en cours</div></div>
+        <div class="card"><h3 data-i18n="activeClients">Clients Actifs</h3><div class="value"><span id="dashClients">0</span></div></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="recentActivity">Dernière activité</h3>
+        <div id="dashActivity" style="color:#64748b;font-size:0.875rem;">Aucune activité récente.</div>
+      </div>
+    </section>
+
+    <!-- CLIENTS -->
+    <section id="mod-clients" class="module">
+      <div class="flex items-center justify-between mb-4">
+        <div><h1 data-i18n="clientsTitle">Base Clients</h1><p class="subtitle" data-i18n="clientsSub">Gérez vos clients et prospects</p></div>
+        <button class="btn btn-primary no-print" onclick="openClientModal()"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> <span data-i18n="addClient">Ajouter un client</span></button>
+      </div>
+      <div class="card table-wrap">
+        <table class="admin-table">
+          <thead><tr>
+            <th data-i18n="id">ID</th><th data-i18n="name">Nom / Raison Sociale</th><th data-i18n="phone">Téléphone</th><th data-i18n="wilaya">Wilaya</th><th data-i18n="project">Projet</th><th data-i18n="status">Statut</th><th class="no-print" style="width:80px;"></th>
+          </tr></thead>
+          <tbody id="clientsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- INVOICES -->
+    <section id="mod-invoices" class="module">
+      <h1 data-i18n="invoicesTitle">Facturation & Devis</h1>
+      <p class="subtitle" data-i18n="invoicesSub">Créez et gérez vos documents commerciaux</p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card no-print">
+          <h3 style="text-transform:none;letter-spacing:0;font-size:1rem;color:#e2e8f0;" id="invFormTitle" data-i18n="newDocument">Nouveau document</h3>
+          <form id="invoiceForm" class="space-y-3 mt-4" onsubmit="generateInvoice(event)">
+            <input type="hidden" id="invEditId" value="">
+            <div><label class="form-label" data-i18n="selectClient">Client</label><select id="invClient" class="form-select" required></select></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="form-label" data-i18n="docType">Type</label><select id="invType" class="form-select"><option value="quote" data-i18n="quote">Devis</option><option value="deposit" data-i18n="deposit">Facture d'Acompte 50%</option><option value="final" data-i18n="finalInvoice">Facture Finale Solde 50%</option></select></div>
+              <div><label class="form-label" data-i18n="date">Date</label><input type="date" id="invDate" class="form-input" required></div>
+            </div>
+            <div>
+              <label class="form-label" data-i18n="items">Articles</label>
+              <div id="itemsContainer" class="space-y-2"></div>
+              <button type="button" class="btn btn-ghost btn-sm mt-2" onclick="addItemRow()"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg> <span data-i18n="addItem">Ajouter un article</span></button>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0.5rem 0;border-top:1px solid rgba(255,255,255,0.06);">
+              <span style="color:#94a3b8;" data-i18n="totalAmount">Montant total HT</span>
+              <span style="color:#e2e8f0;font-weight:700;font-size:1.25rem;"><span id="invTotalDisplay">0</span> DA</span>
+            </div>
+            <div class="flex gap-2">
+              <button type="submit" class="btn btn-primary" id="invSubmitBtn"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> <span data-i18n="generate">Générer le document</span></button>
+              <button type="button" class="btn btn-ghost" onclick="resetInvoiceForm()" style="display:none" id="invCancelEdit"><span data-i18n="cancel">Annuler</span></button>
+            </div>
+          </form>
+        </div>
+        <div class="card no-print">
+          <h3 style="text-transform:none;letter-spacing:0;font-size:1rem;color:#e2e8f0;" data-i18n="docHistory">Documents</h3>
+          <div class="table-wrap" style="margin-top:0.75rem;">
+            <table class="admin-table" style="font-size:0.8rem;">
+              <thead><tr><th data-i18n="id">ID</th><th data-i18n="client">Client</th><th data-i18n="type">Type</th><th>Total</th><th data-i18n="statusLabel">Statut</th><th class="no-print" style="width:120px;"></th></tr></thead>
+              <tbody id="invoiceHistoryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="invoicePreview" class="no-print" style="display:none;"></div>
+    </section>
+
+    <!-- CONTRACTS -->
+    <section id="mod-contracts" class="module">
+      <h1 data-i18n="contractsTitle">Contrat de Prestation</h1>
+      <p class="subtitle" data-i18n="contractsSub">Générez un contrat de services conforme au droit algérien</p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card no-print">
+          <h3 style="text-transform:none;letter-spacing:0;font-size:1rem;color:#e2e8f0;" data-i18n="contractSetup">Paramètres du contrat</h3>
+          <form id="contractForm" class="space-y-3 mt-4" onsubmit="generateContract(event)">
+            <div><label class="form-label" data-i18n="selectClient">Client</label><select id="ctrClient" class="form-select" required></select></div>
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="form-label" data-i18n="contractDate">Date</label><input type="date" id="ctrDate" class="form-input" required></div>
+              <div><label class="form-label" data-i18n="amount">Montant (DA)</label><input type="number" id="ctrAmount" class="form-input" min="1" required></div>
+            </div>
+            <div><label class="form-label" data-i18n="contractScope">Objet / Périmètre</label><textarea id="ctrScope" class="form-textarea" rows="2" placeholder="Ex: Développement d'un site web vitrine..."></textarea></div>
+            <div><label class="form-label" data-i18n="contractDuration">Durée (mois)</label><input type="number" id="ctrDuration" class="form-input" min="1" value="1"></div>
+            <div class="flex gap-2">
+              <button type="submit" class="btn btn-primary"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg> <span data-i18n="generateContract">Générer le contrat</span></button>
+              <button type="button" class="btn btn-ghost" onclick="toggleContractLang()"><span data-i18n="switchLang">FR / AR</span></button>
+            </div>
+          </form>
+        </div>
+        <div class="card no-print">
+          <h3 style="text-transform:none;letter-spacing:0;font-size:1rem;color:#e2e8f0;" data-i18n="contractHistory">Contrats récents</h3>
+          <div id="contractHistory" style="color:#64748b;font-size:0.875rem;margin-top:0.75rem;">Aucun contrat.</div>
+        </div>
+      </div>
+      <div id="contractPreview" class="no-print" style="display:none;"></div>
+    </section>
+
+    <!-- ACCOUNTING -->
+    <section id="mod-accounting" class="module">
+      <h1 data-i18n="accountingTitle">Bilan & Fiscalité</h1>
+      <p class="subtitle" data-i18n="accountingSub">Suivez votre chiffre d'affaires et préparez votre déclaration IFU</p>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="card">
+          <h3 data-i18n="quarterlyRevenue">CA par trimestre</h3>
+          <div id="quarterlyTable" style="margin-top:0.75rem;color:#cbd5e1;font-size:0.875rem;"></div>
+        </div>
+        <div class="card">
+          <h3 data-i18n="taxSummary">Résumé fiscal IFU</h3>
+          <div id="taxSummary" style="margin-top:0.75rem;color:#cbd5e1;font-size:0.875rem;"></div>
+        </div>
+      </div>
+      <div class="card mt-6 no-print">
+        <h3 data-i18n="g12Simulator">Simulateur G n° 12</h3>
+        <p style="color:#64748b;font-size:0.875rem;margin-bottom:0.75rem;" data-i18n="g12Desc">Déclaration de l'Impôt Forfaitaire Unique (IFU) — Auto-entrepreneur</p>
+        <div class="flex gap-3 items-end flex-wrap">
+          <div><label class="form-label" data-i18n="year">Année</label><select id="g12Year" class="form-select"></select></div>
+          <div><label class="form-label" data-i18n="quarter">Trimestre</label><select id="g12Quarter" class="form-select"><option value="1">T1</option><option value="2">T2</option><option value="3">T3</option><option value="4">T4</option></select></div>
+          <button class="btn btn-primary" onclick="generateG12()"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg> <span data-i18n="calculate">Calculer</span></button>
+          <button class="btn btn-ghost" onclick="printModule('accounting')"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg> <span data-i18n="print">Imprimer</span></button>
+        </div>
+        <div id="g12Result" style="margin-top:1rem;"></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="mod-settings" class="module">
+      <h1 data-i18n="settingsTitle">Paramètres</h1>
+      <p class="subtitle" data-i18n="settingsSub">Informations de l'entreprise — elles s'appliquent à tous les documents</p>
+      <div class="card" style="max-width:600px;">
+        <form id="settingsForm" class="space-y-3 mt-2" onsubmit="saveSettings(event)">
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="form-label" data-i18n="companyName">Nom de l'entreprise</label><input type="text" id="setCompanyName" class="form-input"></div>
+            <div><label class="form-label" data-i18n="ownerName">Exploitant</label><input type="text" id="setOwnerName" class="form-input"></div>
+          </div>
+          <div><label class="form-label" data-i18n="anaeNumber">N° Carte ANAE</label><input type="text" id="setAnae" class="form-input"></div>
+          <div><label class="form-label" data-i18n="address">Adresse fiscale</label><input type="text" id="setAddress" class="form-input"></div>
+          <div class="grid grid-cols-2 gap-3">
+            <div><label class="form-label" data-i18n="phone">Téléphone</label><input type="text" id="setPhone" class="form-input"></div>
+            <div><label class="form-label" data-i18n="email">Email</label><input type="email" id="setEmail" class="form-input"></div>
+          </div>
+          <div><label class="form-label" data-i18n="ifuRate">Taux IFU (%)</label><input type="number" id="setIfuRate" class="form-input" step="0.01" min="0" max="100"></div>
+          <button type="submit" class="btn btn-primary"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> <span data-i18n="save">Enregistrer</span></button>
+        </form>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="loginScreen">
+  <div id="loginCard">
+    <div class="logo">
+      <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+      </div>
+      <h1>BesmaInfoEnergy</h1>
+      <p data-i18n="loginSub">Administration sécurisée</p>
+    </div>
+    <div id="loginStep">
+      <div id="stepCreate" style="display:none;">
+        <p style="color:#94a3b8;font-size:0.875rem;text-align:center;margin-bottom:1rem;" data-i18n="createPwdMsg">Créez votre mot de passe administrateur</p>
+        <input type="password" id="newPwd" placeholder="Nouveau mot de passe" style="margin-bottom:0.75rem;">
+        <input type="password" id="confirmPwd" placeholder="Confirmer le mot de passe" style="margin-bottom:0.75rem;">
+        <button class="btn btn-primary w-full justify-center" onclick="createPassword()" style="background:#1e40af;color:#fff;"><span data-i18n="createBtn">Créer</span></button>
+      </div>
+      <div id="stepLogin">
+        <p style="color:#94a3b8;font-size:0.875rem;text-align:center;margin-bottom:1rem;" data-i18n="enterPwd">Entrez votre mot de passe</p>
+        <input type="password" id="loginPwd" placeholder="Mot de passe" style="margin-bottom:0.75rem;" onkeydown="if(event.key==='Enter')login()">
+        <button class="btn btn-primary w-full justify-center" onclick="login()" style="background:#1e40af;color:#fff;"><span data-i18n="loginBtn">Se connecter</span></button>
+      </div>
+      <div id="loginError" style="margin-top:0.75rem;"></div>
+      <div id="bruteForceMsg"></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ============================================================
+//  BESMAINFOENERGY — ADMIN DASHBOARD  V2
+//  Full Client-Side SPA  |  Data: localStorage 'besmainfoenergy_db'
+// ============================================================
+const DB_KEY = 'besmainfoenergy_db';
+let DB = loadDB();
+let currentLang = localStorage.getItem('besma_lang') || 'fr';
+let contractLang = 'fr';
+let inactivityTimer = null;
+let bruteForceAttempts = 0;
+let bruteForceBlockedUntil = 0;
+
+// ---------- DEFAULTS ----------
+function defaultDB() {
+  return {
+    settings: {
+      companyName: 'BesmaInfoEnergy',
+      ownerName: '',
+      anaeNumber: '',
+      address: 'Khenchela, Algérie',
+      phone: '',
+      email: 'besmainfoenergy@gmail.com',
+      ifuRate: 0.5
+    },
+    clients: [],
+    documents: [],
+    contracts: [],
+    password: '',
+    activity: []
+  };
+}
+
+function loadDB() {
+  try { const d = JSON.parse(localStorage.getItem(DB_KEY)); return d && d.clients ? d : defaultDB(); } catch(e) { return defaultDB(); }
+}
+function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
+
+function addActivity(msg) {
+  DB.activity.unshift({ msg, date: new Date().toLocaleString('fr-DZ') });
+  if (DB.activity.length > 50) DB.activity.length = 50;
+  saveDB();
+}
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg, type='success') { const t=document.getElementById('toast'); t.textContent=msg; t.className=type+' show'; setTimeout(()=>t.classList.remove('show'),3500); }
+
+// ---------- IDS ----------
+function nextClientId() { return String((DB.clients.reduce((m,c)=>Math.max(m,parseInt(c.id)||0),0)+1)).padStart(4,'0'); }
+function nextDocId() { return 'DOC-'+String(DB.documents.length+1).padStart(4,'0'); }
+function nextCtrId() { return 'CTR-'+String(DB.contracts.length+1).padStart(4,'0'); }
+
+// ---------- SETTINGS ----------
+function getSettings() {
+  return { ...defaultDB().settings, ...(DB.settings||{}) };
+}
+
+function loadSettingsForm() {
+  const s = getSettings();
+  document.getElementById('setCompanyName').value = s.companyName;
+  document.getElementById('setOwnerName').value = s.ownerName;
+  document.getElementById('setAnae').value = s.anaeNumber;
+  document.getElementById('setAddress').value = s.address;
+  document.getElementById('setPhone').value = s.phone;
+  document.getElementById('setEmail').value = s.email;
+  document.getElementById('setIfuRate').value = s.ifuRate;
+}
+
+function saveSettings(e) {
+  e.preventDefault();
+  DB.settings = {
+    companyName: document.getElementById('setCompanyName').value.trim() || 'BesmaInfoEnergy',
+    ownerName: document.getElementById('setOwnerName').value.trim(),
+    anaeNumber: document.getElementById('setAnae').value.trim(),
+    address: document.getElementById('setAddress').value.trim() || 'Khenchela, Algérie',
+    phone: document.getElementById('setPhone').value.trim(),
+    email: document.getElementById('setEmail').value.trim(),
+    ifuRate: parseFloat(document.getElementById('setIfuRate').value) || 0.5
+  };
+  saveDB();
+  document.getElementById('sidebarBrand').textContent = DB.settings.companyName;
+  addActivity('Paramètres mis à jour.');
+  renderAll();
+  toast('Paramètres enregistrés !');
+}
+
+// ============================================================
+//  AUTHENTICATION
+// ============================================================
+function showLoginStep(s) {
+  document.getElementById('stepCreate').style.display=s==='create'?'block':'none';
+  document.getElementById('stepLogin').style.display=s==='login'?'block':'none';
+}
+function checkAuth() {
+  if (sessionStorage.getItem('besma_auth')==='1') {
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.add('active');
+    renderAll(); return;
+  }
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('app').classList.remove('active');
+  showLoginStep(DB.password ? 'login' : 'create');
+}
+function createPassword() {
+  const p1=document.getElementById('newPwd').value, p2=document.getElementById('confirmPwd').value, el=document.getElementById('loginError');
+  if (!p1||p1.length<4) { el.textContent='Le mot de passe doit faire au moins 4 caractères.'; return; }
+  if (p1!==p2) { el.textContent='Les mots de passe ne correspondent pas.'; return; }
+  DB.password=btoa(p1); saveDB(); el.textContent='';
+  sessionStorage.setItem('besma_auth','1');
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('app').classList.add('active');
+  addActivity('Première connexion — mot de passe créé.');
+  renderAll(); toast('Mot de passe créé avec succès !');
+}
+function login() {
+  const el=document.getElementById('loginError'), bf=document.getElementById('bruteForceMsg'), now=Date.now();
+  if (now<bruteForceBlockedUntil) { bf.textContent='⛔ Trop de tentatives. Réessayez dans '+Math.ceil((bruteForceBlockedUntil-now)/1000)+'s.'; return; }
+  bf.textContent='';
+  if (btoa(document.getElementById('loginPwd').value)===DB.password) {
+    bruteForceAttempts=0; el.textContent='';
+    sessionStorage.setItem('besma_auth','1');
+    document.getElementById('loginScreen').classList.add('hidden');
+    document.getElementById('app').classList.add('active');
+    addActivity('Connexion réussie.'); renderAll(); return;
+  }
+  bruteForceAttempts++;
+  if (bruteForceAttempts>=3) { bruteForceBlockedUntil=now+30000; bf.textContent='⛛ 3 échecs — Bloqué 30s.'; bruteForceAttempts=0; }
+  else el.textContent='Mot de passe incorrect. Tentative '+bruteForceAttempts+'/3.';
+}
+function logout() {
+  sessionStorage.removeItem('besma_auth');
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('loginPwd').value='';
+}
+function resetInactivityTimer() {
+  clearTimeout(inactivityTimer);
+  inactivityTimer=setTimeout(()=>{ logout(); toast('Session verrouillée pour inactivité.','error'); },900000);
+}
+document.addEventListener('click',resetInactivityTimer);
+document.addEventListener('mousemove',resetInactivityTimer);
+
+// ============================================================
+//  LANGUAGE
+// ============================================================
+const TRANS = {
+  fr: {
+    dashboard:'Tableau de bord',clients:'Base Clients',invoices:'Facturation & Devis',contracts:'Contrats',
+    accounting:'Bilan & Fiscalité',settings:'Paramètres','export':'Exporter',import:'Importer',logout:'Déconnexion',
+    dashboardTitle:'Tableau de bord',dashboardSub:"Vue d'ensemble de votre activité",
+    revenue:'CA Encaissé',unpaid:'Documents émis',taxDue:'IFU Estimé',taxYear:'Année en cours',activeClients:'Clients Actifs',recentActivity:'Dernière activité',
+    clientsTitle:'Base Clients',clientsSub:'Gérez vos clients et prospects',addClient:'Ajouter un client',
+    id:'ID',name:'Nom / Raison Sociale',phone:'Téléphone',wilaya:'Wilaya',project:'Projet',status:'Statut',
+    active:'Actif',archived:'Archivé',edit:'Modifier',archive:'Archiver',
+    invoicesTitle:'Facturation & Devis',invoicesSub:'Créez et gérez vos documents commerciaux',
+    newDocument:'Nouveau document',selectClient:'Client',docType:'Type',date:'Date',items:'Articles',
+    totalAmount:'Montant total HT',generate:'Générer le document',
+    docHistory:'Documents',client:'Client',type:'Type',statusLabel:'Statut',addItem:'Ajouter un article',
+    quote:'Devis',deposit:"Facture d'Acompte 50%",finalInvoice:'Facture Finale Solde 50%',
+    editDoc:'Modifier',cancelDoc:'Annuler',deleteDoc:'Supprimer',print:'Imprimer',cancel:'Annuler',
+    contractsTitle:'Contrat de Prestation',contractsSub:'Générez un contrat de services conforme au droit algérien',
+    contractSetup:'Paramètres du contrat',contractDate:'Date',contractScope:'Objet / Périmètre',
+    contractDuration:'Durée (mois)',generateContract:'Générer le contrat',switchLang:'FR / AR',
+    contractHistory:'Contrats récents',
+    accountingTitle:'Bilan & Fiscalité',accountingSub:"Suivez votre chiffre d'affaires et préparez votre déclaration IFU",
+    quarterlyRevenue:'CA par trimestre',taxSummary:'Résumé fiscal IFU',
+    g12Simulator:'Simulateur G n° 12',g12Desc:"Déclaration de l'Impôt Forfaitaire Unique (IFU) — Auto-entrepreneur",
+    year:'Année',quarter:'Trimestre',calculate:'Calculer',
+    settingsTitle:'Paramètres',settingsSub:"Informations de l'entreprise — elles s'appliquent à tous les documents",
+    companyName:"Nom de l'entreprise",ownerName:'Exploitant',anaeNumber:'N° Carte ANAE',address:'Adresse fiscale',
+    email:'Email',ifuRate:'Taux IFU (%)',save:'Enregistrer',
+    loginSub:'Administration sécurisée',createPwdMsg:'Créez votre mot de passe administrateur',
+    createBtn:'Créer',enterPwd:'Entrez votre mot de passe',loginBtn:'Se connecter',
+    cancelled:'Annulé',activeLabel:'Actif',confirmDelete:'Confirmer la suppression ?',
+  },
+  ar: {
+    dashboard:'لوحة القيادة',clients:'قاعدة العملاء',invoices:'الفواتير وعروض الأسعار',contracts:'العقود',
+    accounting:'الميزانية والضرائب',settings:'الإعدادات','export':'تصدير',import:'استيراد',logout:'تسجيل الخروج',
+    dashboardTitle:'لوحة القيادة',dashboardSub:'نظرة عامة على النشاط',
+    revenue:'الإيرادات المحصلة',unpaid:'المستندات الصادرة',taxDue:'الضريبة المقدرة',taxYear:'السنة الحالية',activeClients:'العملاء النشطون',recentActivity:'آخر النشاطات',
+    clientsTitle:'قاعدة العملاء',clientsSub:'إدارة العملاء والآفاق',addClient:'إضافة عميل',
+    id:'المعرف',name:'الاسم / التسمية',phone:'الهاتف',wilaya:'الولاية',project:'المشروع',status:'الحالة',
+    active:'نشط',archived:'مؤرشف',edit:'تعديل',archive:'أرشفة',
+    invoicesTitle:'الفواتير وعروض الأسعار',invoicesSub:'إنشاء وإدارة المستندات التجارية',
+    newDocument:'مستند جديد',selectClient:'العميل',docType:'النوع',date:'التاريخ',items:'البنود',
+    totalAmount:'المبلغ الإجمالي',generate:'إنشاء المستند',
+    docHistory:'المستندات',client:'العميل',type:'النوع',statusLabel:'الحالة',addItem:'إضافة بند',
+    quote:'عرض سعر',deposit:'فاتورة دفعة 50%',finalInvoice:'فاتورة الرصيد النهائي 50%',
+    editDoc:'تعديل',cancelDoc:'إلغاء',deleteDoc:'حذف',print:'طباعة',cancel:'إلغاء',
+    contractsTitle:'عقد تقديم الخدمات',contractsSub:'إنشاء عقد خدمات متوافق مع القانون الجزائري',
+    contractSetup:'إعدادات العقد',contractDate:'التاريخ',contractScope:'الموضوع / النطاق',
+    contractDuration:'المدة (بالأشهر)',generateContract:'إنشاء العقد',switchLang:'عربي / فرنسي',
+    contractHistory:'العقود الحديثة',
+    accountingTitle:'الميزانية والضرائب',accountingSub:'تتبع إيراداتك وتحضير تصريح IFU',
+    quarterlyRevenue:'الإيرادات ربع السنوية',taxSummary:'ملخص ضريبة IFU',
+    g12Simulator:'محاكي النموذج G رقم 12',g12Desc:'تصريح الضريبة الموحدة (IFU) — المقاول الذاتي',
+    year:'السنة',quarter:'الربع',calculate:'حساب',
+    settingsTitle:'الإعدادات',settingsSub:'معلومات الشركة — تُطبق على جميع المستندات',
+    companyName:'اسم الشركة',ownerName:'المستغل',anaeNumber:'رقم بطاقة ANAE',address:'العنوان الضريبي',
+    email:'البريد الإلكتروني',ifuRate:'نسبة IFU (%)',save:'حفظ',
+    loginSub:'إدارة آمنة',createPwdMsg:'إنشاء كلمة مرور المسؤول',
+    createBtn:'إنشاء',enterPwd:'أدخل كلمة المرور',loginBtn:'تسجيل الدخول',
+    cancelled:'ملغى',activeLabel:'نشط',confirmDelete:'تأكيد الحذف؟',
+  }
+};
+
+function applyLang(lang) {
+  currentLang=lang; localStorage.setItem('besma_lang',lang);
+  document.documentElement.lang=lang; document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.getElementById('langLabel').textContent=lang==='fr'?'FR':'AR';
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if (TRANS[lang]&&TRANS[lang][k]) el.textContent=TRANS[lang][k];
+  });
+  renderClientsTable(); renderDocHistory(); renderContractHistory(); renderAccounting();
+}
+function toggleLang() { applyLang(currentLang==='fr'?'ar':'fr'); }
+
+// ============================================================
+//  MODULE SWITCHING
+// ============================================================
+function switchModule(name) {
+  document.querySelectorAll('.module').forEach(m=>m.classList.remove('active'));
+  const mod=document.getElementById('mod-'+name); if(mod) mod.classList.add('active');
+  document.querySelectorAll('#sidebarNav button').forEach(b=>b.classList.remove('active'));
+  const btn=document.querySelector(`#sidebarNav button[data-module="${name}"]`); if(btn) btn.classList.add('active');
+  if (name==='clients') renderClientsTable();
+  if (name==='invoices') { renderInvoiceForm(); renderDocHistory(); }
+  if (name==='contracts') { renderContractForm(); renderContractHistory(); }
+  if (name==='accounting') renderAccounting();
+  if (name==='settings') loadSettingsForm();
+}
+
+// ============================================================
+//  CLIENTS CRUD
+// ============================================================
+function renderClientsTable() {
+  const tbody=document.getElementById('clientsTableBody'); if(!tbody) return;
+  if (!DB.clients.length) { tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:2rem;color:#64748b;">Aucun client.</td></tr>'; return; }
+  tbody.innerHTML=DB.clients.map(c=>{
+    const st=c.archived?'archived':'', sl=c.archived?TRANS[currentLang].archived:TRANS[currentLang].active;
+    return `<tr class="${st}"><td>#${c.id}</td><td>${escHtml(c.name)}</td><td>${escHtml(c.phone||'-')}</td>
+      <td>${escHtml(c.wilaya||'-')}</td><td>${escHtml(c.project||'-')}</td><td>${sl}</td>
+      <td class="no-print">
+        <button class="btn-icon" onclick="editClient('${c.id}')" title="${TRANS[currentLang].edit}"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+        <button class="btn-icon" onclick="toggleArchiveClient('${c.id}')" title="${TRANS[currentLang].archive}"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg></button>
+      </td></tr>`;
+  }).join('');
+}
+
+function openClientModal(data) {
+  const isEdit=!!data;
+  const div=document.createElement('div');
+  div.innerHTML=`<div id="clientModalOverlay" style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;" onclick="if(event.target===this)closeClientModal()">
+    <div style="background:#1a2332;border:1px solid rgba(255,255,255,0.1);border-radius:1.25rem;padding:2rem;width:100%;max-width:480px;margin:1rem;">
+      <h2 style="color:#fff;font-size:1.25rem;font-weight:700;margin-bottom:1rem;">${isEdit?'Modifier le client':'Ajouter un client'}</h2>
+      <form id="clientFormModal" class="space-y-3" onsubmit="saveClientModal(event,'${isEdit?data.id:''}')">
+        <div><label class="form-label">${TRANS[currentLang].name}</label><input type="text" id="cfName" class="form-input" value="${escHtml(isEdit?data.name:'')}" required></div>
+        <div><label class="form-label">${TRANS[currentLang].phone}</label><input type="text" id="cfPhone" class="form-input" value="${escHtml(isEdit?data.phone:'')}"></div>
+        <div><label class="form-label">${TRANS[currentLang].wilaya}</label><input type="text" id="cfWilaya" class="form-input" value="${escHtml(isEdit?data.wilaya:'')}"></div>
+        <div><label class="form-label">${TRANS[currentLang].project}</label><input type="text" id="cfProject" class="form-input" value="${escHtml(isEdit?data.project:'')}"></div>
+        <div class="flex gap-2 mt-4"><button type="submit" class="btn btn-primary">${isEdit?'Enregistrer':'Ajouter'}</button><button type="button" class="btn btn-ghost" onclick="closeClientModal()">Annuler</button></div>
+      </form>
+    </div></div>`;
+  document.body.appendChild(div.firstElementChild);
+}
+function closeClientModal() { const el=document.getElementById('clientModalOverlay'); if(el) el.remove(); }
+function saveClientModal(e,id) {
+  e.preventDefault();
+  const n=document.getElementById('cfName').value.trim(), p=document.getElementById('cfPhone').value.trim(), w=document.getElementById('cfWilaya').value.trim(), pr=document.getElementById('cfProject').value.trim();
+  if (!n) return;
+  if (id) { const c=DB.clients.find(x=>x.id===id); if(c){c.name=n;c.phone=p;c.wilaya=w;c.project=pr;addActivity('Client #'+id+' modifié.');} }
+  else { const newId=nextClientId(); DB.clients.push({id:newId,name:n,phone:p,wilaya:w,project:pr,archived:false}); addActivity('Client #'+newId+' ajouté : '+n); }
+  saveDB(); closeClientModal(); renderClientsTable(); renderInvoiceForm(); renderContractForm(); renderAll(); toast(id?'Client modifié.':'Client ajouté.');
+}
+function editClient(id) { const c=DB.clients.find(x=>x.id===id); if(c) openClientModal(c); }
+function toggleArchiveClient(id) {
+  const c=DB.clients.find(x=>x.id===id); if(c){c.archived=!c.archived;saveDB();renderClientsTable();renderAll();toast(c.archived?'Client archivé.':'Client réactivé.');}
+}
+
+// ============================================================
+//  INVOICES — MULTI-ITEM + FULL CRUD
+// ============================================================
+let itemCount = 0;
+
+function addItemRow(desc, qty, price) {
+  itemCount++;
+  const idx = itemCount;
+  const container = document.getElementById('itemsContainer');
+  const div = document.createElement('div');
+  div.className = 'item-row';
+  div.id = 'itemRow-'+idx;
+  div.innerHTML = `
+    <input type="text" class="form-input item-desc" placeholder="Désignation" value="${escHtml(desc||'')}" style="font-size:0.8rem;" oninput="calcTotal()">
+    <input type="number" class="form-input item-qty" placeholder="Qté" value="${qty||1}" min="1" style="font-size:0.8rem;text-align:center;" oninput="calcTotal()">
+    <input type="number" class="form-input item-price" placeholder="P.U. DA" value="${price||''}" min="0" style="font-size:0.8rem;text-align:right;" oninput="calcTotal()">
+    <button type="button" class="btn-icon" onclick="removeItemRow(${idx})" style="align-self:end;padding-bottom:0.625rem;">
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>`;
+  container.appendChild(div);
+  calcTotal();
+}
+
+function removeItemRow(idx) {
+  const el = document.getElementById('itemRow-'+idx);
+  if (el) { el.remove(); calcTotal(); }
+}
+
+function calcTotal() {
+  let total = 0;
+  document.querySelectorAll('.item-row').forEach(row => {
+    const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+    const price = parseFloat(row.querySelector('.item-price').value) || 0;
+    total += qty * price;
+  });
+  document.getElementById('invTotalDisplay').textContent = total.toLocaleString();
+  return total;
+}
+
+function getItems() {
+  const items = [];
+  document.querySelectorAll('.item-row').forEach(row => {
+    const desc = row.querySelector('.item-desc').value.trim() || 'Prestation';
+    const qty = parseFloat(row.querySelector('.item-qty').value) || 1;
+    const price = parseFloat(row.querySelector('.item-price').value) || 0;
+    if (price > 0) items.push({ desc, qty, price });
+  });
+  return items.length ? items : [{ desc: 'Prestation de services informatiques', qty: 1, price: 0 }];
+}
+
+function renderInvoiceForm() {
+  const sel=document.getElementById('invClient'); if(!sel) return;
+  sel.innerHTML='<option value="">— Sélectionner —</option>'+DB.clients.filter(c=>!c.archived).map(c=>'<option value="'+c.id+'">'+escHtml(c.name)+'</option>').join('');
+  document.getElementById('invDate').value=new Date().toISOString().split('T')[0];
+  if (!document.querySelector('.item-row')) addItemRow();
+}
+
+function resetInvoiceForm() {
+  document.getElementById('invEditId').value = '';
+  document.getElementById('itemsContainer').innerHTML = '';
+  addItemRow();
+  calcTotal();
+  document.getElementById('invCancelEdit').style.display = 'none';
+  document.getElementById('invFormTitle').textContent = TRANS[currentLang].newDocument || 'Nouveau document';
+  document.getElementById('invSubmitBtn').querySelector('span').textContent = TRANS[currentLang].generate || 'Générer le document';
+  document.getElementById('invPreview').style.display = 'none';
+  renderInvoiceForm();
+}
+
+function renderDocHistory() {
+  const tbody = document.getElementById('invoiceHistoryBody'); if (!tbody) return;
+  if (!DB.documents.length) { tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;color:#64748b;">Aucun document.</td></tr>'; return; }
+  const typeMap = { quote: TRANS[currentLang].quote||'Devis', deposit: TRANS[currentLang].deposit||'Acompte 50%', final: TRANS[currentLang].finalInvoice||'Solde 50%' };
+  tbody.innerHTML = DB.documents.slice().reverse().map(d => {
+    const total = d.items ? d.items.reduce((s,i)=>s+i.qty*i.price, 0) : (d.amount||0);
+    const badge = d.status === 'cancelled' ? 'badge-cancelled' : 'badge-active';
+    const label = d.status === 'cancelled' ? (TRANS[currentLang].cancelled||'Annulé') : (TRANS[currentLang].activeLabel||'Actif');
+    return `<tr class="${d.status==='cancelled'?'cancelled':''}">
+      <td>${d.id}</td><td>${escHtml(d.clientName)}</td><td>${typeMap[d.type]||d.type}</td>
+      <td>${total.toLocaleString()} DA</td>
+      <td><span class="badge ${badge}">${label}</span></td>
+      <td class="no-print">
+        <button class="btn-icon" onclick="editDoc('${d.id}')" title="${TRANS[currentLang].editDoc}"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></button>
+        ${d.status !== 'cancelled' ? `<button class="btn-icon" onclick="cancelDoc('${d.id}')" title="${TRANS[currentLang].cancelDoc}"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>` : ''}
+        <button class="btn-icon" onclick="deleteDoc('${d.id}')" title="${TRANS[currentLang].deleteDoc}"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+        <button class="btn-icon" onclick="previewDoc('${d.id}')" title="${TRANS[currentLang].print}"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg></button>
+      </td></tr>`;
+  }).join('');
+}
+
+function generateInvoice(e) {
+  e.preventDefault();
+  const editId = document.getElementById('invEditId').value;
+  const clientId = document.getElementById('invClient').value;
+  const type = document.getElementById('invType').value;
+  const date = document.getElementById('invDate').value;
+  if (!clientId) { toast('Veuillez sélectionner un client.','error'); return; }
+  const items = getItems();
+  const total = items.reduce((s,i)=>s+i.qty*i.price, 0);
+  if (total < 1) { toast('Veuillez entrer un montant valide.','error'); return; }
+  const client = DB.clients.find(c=>c.id===clientId);
+  if (!client) { toast('Client introuvable.','error'); return; }
+
+  if (editId) {
+    const doc = DB.documents.find(d=>d.id===editId);
+    if (doc) {
+      doc.clientId=clientId; doc.clientName=client.name; doc.type=type; doc.date=date; doc.items=items; doc.total=total;
+      saveDB(); addActivity('Document '+editId+' modifié.'); resetInvoiceForm(); renderDocHistory(); renderAll();
+      toast('Document modifié.'); return;
+    }
+  }
+
+  const docId = nextDocId();
+  DB.documents.push({ id:docId, clientId, clientName:client.name, type, date, items, total, status:'active', createdAt:new Date().toISOString() });
+  saveDB(); addActivity('Document '+docId+' créé : '+type+' — '+client.name);
+  resetInvoiceForm(); renderDocHistory(); renderAll();
+  showDocPreview(docId);
+  toast('Document généré !');
+}
+
+function editDoc(id) {
+  const d = DB.documents.find(x=>x.id===id);
+  if (!d) return;
+  document.getElementById('invEditId').value = d.id;
+  document.getElementById('invClient').value = d.clientId;
+  document.getElementById('invType').value = d.type;
+  document.getElementById('invDate').value = d.date;
+  document.getElementById('itemsContainer').innerHTML = '';
+  itemCount = 0;
+  (d.items||[{desc:'Prestation',qty:1,price:d.total||0}]).forEach(i => addItemRow(i.desc, i.qty, i.price));
+  calcTotal();
+  document.getElementById('invCancelEdit').style.display = 'inline-flex';
+  document.getElementById('invFormTitle').textContent = 'Modifier le document';
+  document.getElementById('invSubmitBtn').querySelector('span').textContent = 'Enregistrer';
+  document.getElementById('invPreview').style.display = 'none';
+}
+
+function cancelDoc(id) {
+  const d = DB.documents.find(x=>x.id===id);
+  if (d) { d.status='cancelled'; saveDB(); addActivity('Document '+id+' annulé.'); renderDocHistory(); renderAll(); toast('Document annulé.'); }
+}
+
+function deleteDoc(id) {
+  if (!confirm(TRANS[currentLang].confirmDelete || 'Confirmer la suppression ?')) return;
+  DB.documents = DB.documents.filter(x=>x.id!==id);
+  saveDB(); addActivity('Document '+id+' supprimé.'); renderDocHistory(); renderAll(); toast('Document supprimé.');
+}
+
+function previewDoc(id) {
+  showDocPreview(id);
+  switchModule('invoices');
+}
+
+function showDocPreview(docId) {
+  const d = DB.documents.find(x=>x.id===docId);
+  if (!d) return;
+  const s = getSettings();
+  const div = document.getElementById('invoicePreview');
+  const isQuote = d.type === 'quote';
+  const typeLabel = { quote:'DEVIS', deposit:"FACTURE D'ACOMPTE (50%)", final:'FACTURE FINALE — SOLDE (50%)' }[d.type]||'DOCUMENT';
+
+  let itemsHtml = (d.items||[{desc:'Prestation',qty:1,price:d.total}]).map(i => {
+    const st = i.qty * i.price;
+    return `<tr><td>${escHtml(i.desc)}</td><td style="text-align:center;">${i.qty}</td><td style="text-align:right;">${i.price.toLocaleString()}</td><td style="text-align:right;font-weight:600;">${st.toLocaleString()}</td></tr>`;
+  }).join('');
+
+  const total = d.items ? d.items.reduce((s,i)=>s+i.qty*i.price, 0) : (d.amount||0);
+
+  div.style.display = 'block';
+  div.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:2px solid #1e40af;">
+      <div>
+        <h2 style="font-size:1.5rem;font-weight:800;color:#1e40af;">${escHtml(s.companyName)}</h2>
+        <p style="font-size:0.8rem;color:#64748b;">Auto-entrepreneur${s.ownerName?' — '+escHtml(s.ownerName):''}</p>
+        ${s.anaeNumber ? '<p style="font-size:0.8rem;color:#64748b;">N° ANAE : '+escHtml(s.anaeNumber)+'</p>' : ''}
+        <p style="font-size:0.8rem;color:#64748b;">${escHtml(s.address)}</p>
+        ${s.phone ? '<p style="font-size:0.8rem;color:#64748b;">Tél : '+escHtml(s.phone)+'</p>' : ''}
+        <p style="font-size:0.8rem;color:#64748b;">${escHtml(s.email)}</p>
+      </div>
+      <div style="text-align:right;">
+        <h3 style="font-size:1.25rem;font-weight:700;color:#1e40af;">${typeLabel}</h3>
+        <p style="font-size:0.8rem;color:#64748b;">N° ${d.id}</p>
+        <p style="font-size:0.8rem;color:#64748b;">Date : ${d.date}</p>
+        ${d.status==='cancelled'?'<p style="color:#ef4444;font-weight:700;margin-top:0.5rem;">ANNULE</p>':''}
+      </div>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <h4 style="font-weight:600;font-size:0.875rem;color:#475569;margin-bottom:0.25rem;">CLIENT</h4>
+      <p style="font-size:0.875rem;">${escHtml(d.clientName)}</p>
+    </div>
+    <table>
+      <thead><tr><th style="width:50%;">Désignation</th><th style="width:10%;">Qté</th><th style="width:20%;text-align:right;">P.U. (DA)</th><th style="width:20%;text-align:right;">Total (DA)</th></tr></thead>
+      <tbody>${itemsHtml}</tbody>
+      <tfoot><tr>
+        <td colspan="3" style="text-align:right;font-weight:700;font-size:1rem;">${isQuote?'Total estimé':'Total à payer'} :</td>
+        <td style="text-align:right;font-weight:700;font-size:1rem;color:#1e40af;">${total.toLocaleString()} DA</td>
+      </tr></tfoot>
+    </table>
+    <div style="margin-top:2rem;padding:1rem;background:#fef3c7;border:2px solid #f59e0b;border-radius:0.75rem;text-align:center;">
+      <p style="font-weight:700;font-size:0.9rem;color:#92400e;">
+        Non assujetti à la TVA — Statut d'auto-entrepreneur, Loi n° 22-23<br>
+        <span style="font-size:0.85rem;">غير خاضع للضريبة على القيمة المضافة — قانون المقاول الذاتي رقم 22-23</span>
+      </p>
+    </div>
+    <div style="margin-top:1.5rem;text-align:center;" class="no-print">
+      <button class="btn btn-primary" onclick="window.print()"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg> Imprimer / PDF</button>
+    </div>
+  `;
+  div.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ============================================================
+//  CONTRACTS
+// ============================================================
+function renderContractForm() {
+  const sel=document.getElementById('ctrClient'); if(!sel) return;
+  sel.innerHTML='<option value="">— Sélectionner —</option>'+DB.clients.filter(c=>!c.archived).map(c=>'<option value="'+c.id+'">'+escHtml(c.name)+'</option>').join('');
+  document.getElementById('ctrDate').value=new Date().toISOString().split('T')[0];
+}
+function renderContractHistory() {
+  const div=document.getElementById('contractHistory'); if(!div) return;
+  const ctrs=DB.contracts.slice().reverse().slice(0,15);
+  if (!ctrs.length) { div.innerHTML='Aucun contrat.'; return; }
+  div.innerHTML=ctrs.map(c=>'<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.04);"><div><strong>Contrat</strong> — '+escHtml(c.clientName)+' <span style="color:#64748b;font-size:0.8rem;">('+c.date+')</span></div><div style="color:#e2e8f0;font-weight:600;">'+c.amount.toLocaleString()+' DA</div></div>').join('');
+}
+function generateContract(e) {
+  e.preventDefault();
+  const clientId=document.getElementById('ctrClient').value, date=document.getElementById('ctrDate').value,
+    amount=parseFloat(document.getElementById('ctrAmount').value),
+    scope=(document.getElementById('ctrScope').value.trim())||'Prestation de services informatiques',
+    duration=parseInt(document.getElementById('ctrDuration').value)||1;
+  if (!clientId){toast('Veuillez sélectionner un client.','error');return;}
+  if (!amount||amount<1){toast('Montant invalide.','error');return;}
+  const client=DB.clients.find(c=>c.id===clientId); if(!client){toast('Client introuvable.','error');return;}
+  const ctrId=nextCtrId();
+  DB.contracts.push({id:ctrId,clientId,clientName:client.name,date,amount,scope,duration});
+  saveDB(); addActivity('Contrat '+ctrId+' créé pour '+client.name);
+  renderContractHistory(); renderAll();
+  showContract(ctrId); toast('Contrat généré !');
+}
+function showContract(ctrId) {
+  const c=DB.contracts.find(x=>x.id===ctrId); if(!c) return;
+  const client=DB.clients.find(x=>x.id===c.clientId); if(!client) return;
+  const div=document.getElementById('contractPreview'); div.style.display='block'; div.innerHTML='';
+  renderContractContent(div,c,client,contractLang);
+}
+function renderContractContent(div,ctr,client,lang) {
+  const s=getSettings();
+  const fr=lang==='fr';
+  const inner=document.createElement('div'); inner.style.cssText='max-width:800px;margin:0 auto;';
+  if (fr) {
+    inner.innerHTML=`
+      <div style="text-align:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:2px solid #1e40af;">
+        <h2 style="font-size:1.5rem;font-weight:800;color:#1e40af;">CONTRAT DE PRESTATION DE SERVICES</h2>
+        <p style="font-size:0.85rem;color:#64748b;">Conforme au Code Civil algérien — Loi n° 22-23</p>
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <p><strong>Entre les soussignés :</strong></p>
+        <p style="margin:0.5rem 0;"><strong>${escHtml(s.companyName)}</strong>, Auto-entrepreneur${s.ownerName?' — '+escHtml(s.ownerName):''}${s.anaeNumber?', N° ANAE : '+escHtml(s.anaeNumber):''}, ${escHtml(s.address)}, Email : ${escHtml(s.email)}, ci-après dénommé <strong>« Le Prestataire »</strong>,</p>
+        <p style="margin:0.5rem 0;">ET</p>
+        <p style="margin:0.5rem 0;"><strong>${escHtml(client.name)}</strong>${client.phone?', Tél : '+escHtml(client.phone):''}${client.wilaya?', Wilaya : '+escHtml(client.wilaya):''}, ci-après dénommé <strong>« Le Client »</strong>,</p>
+      </div>
+      <div style="margin-bottom:1.5rem;"><p><strong>Il a été convenu ce qui suit :</strong></p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 1 — Objet</h4><p>Le Prestataire s'engage à réaliser pour le Client la prestation suivante : <strong>${escHtml(ctr.scope)}</strong>, dans le cadre d'un contrat de prestation de services informatiques.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 2 — Durée</h4><p>Le présent contrat est conclu pour une durée de <strong>${ctr.duration} mois</strong> à compter de la date de signature. Il pourra être reconduit tacitement par accord mutuel.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 3 — Montant et modalités de paiement</h4><p>Le montant total de la prestation est fixé à <strong>${ctr.amount.toLocaleString()} DA</strong> (Dinars algériens), payable selon les modalités suivantes :</p><ul style="margin:0.5rem 0 0 1.5rem;"><li>50% à la commande (Acompte)</li><li>50% à la livraison (Solde)</li></ul><p style="margin-top:0.5rem;font-weight:600;">Non assujetti à la TVA — Statut d'auto-entrepreneur, Loi n° 22-23.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 4 — Obligations du Prestataire</h4><ul style="margin:0.5rem 0 0 1.5rem;"><li>Réaliser la prestation dans les délais convenus ;</li><li>Respecter les spécifications techniques définies ;</li><li>Assurer la confidentialité des informations du Client ;</li><li>Fournir un travail conforme aux normes professionnelles en vigueur.</li></ul></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 5 — Obligations du Client</h4><ul style="margin:0.5rem 0 0 1.5rem;"><li>Fournir toutes les informations nécessaires à la réalisation de la prestation ;</li><li>Payer le montant convenu selon les modalités prévues ;</li><li>Collaborer activement avec le Prestataire.</li></ul></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 6 — Propriété intellectuelle</h4><p>Le code source, les livrables et tout élément développé dans le cadre de ce contrat deviennent la propriété du Client après paiement intégral. Le Prestataire conserve le droit de mentionner la réalisation dans son portfolio.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 7 — Résiliation</h4><p>En cas de manquement grave par l'une des parties à ses obligations, le contrat peut être résilié de plein droit par l'autre partie, après mise en demeure restée sans effet pendant 15 jours.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">Article 8 — Litiges</h4><p>Les parties s'efforceront de résoudre à l'amiable tout litige né de l'exécution du contrat. À défaut, le tribunal compétent sera celui de ${escHtml(s.address)}.</p></div>
+      <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid #e2e8f0;"><p style="font-size:0.875rem;color:#64748b;">Fait en deux exemplaires, le ${ctr.date}.</p><div style="display:flex;justify-content:space-between;margin-top:2rem;"><div><p style="font-weight:600;">Le Prestataire</p><p style="font-size:0.8rem;color:#64748b;">${escHtml(s.companyName)}</p></div><div style="text-align:right;"><p style="font-weight:600;">Le Client</p><p style="font-size:0.8rem;color:#64748b;">${escHtml(client.name)}</p></div></div></div>`;
+  } else {
+    inner.innerHTML=`
+      <div style="text-align:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:2px solid #1e40af;">
+        <h2 style="font-size:1.5rem;font-weight:800;color:#1e40af;">عقد تقديم خدمات معلوماتية</h2>
+        <p style="font-size:0.85rem;color:#64748b;">مطابق للقانون المدني الجزائري — قانون المقاول الذاتي رقم 22-23</p>
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <p><strong>بين الأطراف الموقعة أدناه :</strong></p>
+        <p style="margin:0.5rem 0;"><strong>${escHtml(s.companyName)}</strong>، مقاول ذاتي${s.ownerName?' — '+escHtml(s.ownerName):''}${s.anaeNumber?'، رقم ANAE: '+escHtml(s.anaeNumber):''}، ${escHtml(s.address)}، البريد الإلكتروني: ${escHtml(s.email)}، ويشار إليه فيما يلي بصفته <strong>« مقدم الخدمة »</strong>،</p>
+        <p style="margin:0.5rem 0;">و</p>
+        <p style="margin:0.5rem 0;"><strong>${escHtml(client.name)}</strong>${client.phone?'، هاتف: '+escHtml(client.phone):''}${client.wilaya?'، ولاية: '+escHtml(client.wilaya):''}، ويشار إليه فيما يلي بصفته <strong>« العميل »</strong>،</p>
+      </div>
+      <div style="margin-bottom:1.5rem;"><p><strong>تم الاتفاق على ما يلي :</strong></p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 1 — الموضوع</h4><p>يتعهد مقدم الخدمة بإنجاز الخدمة التالية للعميل: <strong>${escHtml(ctr.scope)}</strong>، في إطار عقد تقديم خدمات معلوماتية.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 2 — المدة</h4><p>يبرم هذا العقد لمدة <strong>${ctr.duration} شهراً</strong> تبدأ من تاريخ التوقيع. ويمكن تجديده تلقائياً باتفاق الطرفين.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 3 — المبلغ وطرق الدفع</h4><p>يحدد المبلغ الإجمالي للخدمة بـ <strong>${ctr.amount.toLocaleString()} د.ج</strong> (دينار جزائري)، يدفع وفقاً للشروط التالية:</p><ul style="margin:0.5rem 0 0 1.5rem;"><li>50% عند الطلب (دفعة)</li><li>50% عند التسليم (الرصيد)</li></ul><p style="margin-top:0.5rem;font-weight:600;">غير خاضع للضريبة على القيمة المضافة — قانون المقاول الذاتي رقم 22-23.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 4 — التزامات مقدم الخدمة</h4><ul style="margin:0.5rem 0 0 1.5rem;"><li>إنجاز الخدمة في الآجال المتفق عليها؛</li><li>احترام المواصفات التقنية المحددة؛</li><li>ضمان سرية معلومات العميل؛</li><li>تقديم عمل مطابق للمعايير المهنية السارية.</li></ul></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 5 — التزامات العميل</h4><ul style="margin:0.5rem 0 0 1.5rem;"><li>توفير جميع المعلومات اللازمة لإنجاز الخدمة؛</li><li>دفع المبلغ المتفق عليه وفق الشروط المحددة؛</li><li>التعاون بنشاط مع مقدم الخدمة.</li></ul></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 6 — الملكية الفكرية</h4><p>يصبح كود المصدر والتسليمات وجميع العناصر المطورة في إطار هذا العقد ملكاً للعميل بعد الدفع الكامل. يحتفظ مقدم الخدمة بحق ذكر الإنجاز في محفظة أعماله.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 7 — الفسخ</h4><p>في حالة الإخلال الجسيم بأحد الطرفين لالتزاماته، يمكن للطرف الآخر فسخ العقد بحكم القانون، بعد إنذار دون جدوى لمدة 15 يوماً.</p></div>
+      <div style="margin-bottom:1rem;"><h4 style="font-weight:700;color:#1e40af;">المادة 8 — المنازعات</h4><p>يسعى الطرفان إلى تسوية أي نزاع ناتج عن تنفيذ هذا العقد وديًا. وفي حالة عدم الاتفاق، تكون المحكمة المختصة هي محكمة ${escHtml(s.address)}.</p></div>
+      <div style="margin-top:2rem;padding-top:1rem;border-top:1px solid #e2e8f0;"><p style="font-size:0.875rem;color:#64748b;">حرر من نسختين، بتاريخ ${ctr.date}.</p><div style="display:flex;justify-content:space-between;margin-top:2rem;"><div><p style="font-weight:600;">مقدم الخدمة</p><p style="font-size:0.8rem;color:#64748b;">${escHtml(s.companyName)}</p></div><div style="text-align:left;"><p style="font-weight:600;">العميل</p><p style="font-size:0.8rem;color:#64748b;">${escHtml(client.name)}</p></div></div></div>`;
+  }
+  const pb=document.createElement('div'); pb.style.cssText='text-align:center;margin-top:2rem;'; pb.className='no-print';
+  pb.innerHTML='<button class="btn btn-primary" onclick="window.print()"><svg class="w-4 h-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg> Imprimer / PDF</button>';
+  div.appendChild(inner); div.appendChild(pb);
+}
+function toggleContractLang() {
+  contractLang=contractLang==='fr'?'ar':'fr';
+  const div=document.getElementById('contractPreview');
+  if (div.style.display!=='none'&&DB.contracts.length>0) {
+    const last=DB.contracts[DB.contracts.length-1], client=DB.clients.find(c=>c.id===last.clientId);
+    if(last&&client){div.innerHTML='';renderContractContent(div,last,client,contractLang);}
+  }
+  toast('Langue : '+(contractLang==='fr'?'Français':'العربية'));
+}
+
+// ============================================================
+//  ACCOUNTING
+// ============================================================
+function renderAccounting() {
+  const qDiv=document.getElementById('quarterlyTable'), tDiv=document.getElementById('taxSummary');
+  if (!qDiv||!tDiv) return;
+  const s=getSettings();
+  const activeDocs=DB.documents.filter(d=>d.status!=='cancelled');
+  const byYear={};
+  activeDocs.forEach(d=>{
+    const dt=new Date(d.date), y=dt.getFullYear(), q=Math.ceil((dt.getMonth()+1)/3);
+    if (!byYear[y]) byYear[y]={}; if (!byYear[y][q]) byYear[y][q]=0;
+    const total=d.items?d.items.reduce((s,i)=>s+i.qty*i.price,0):(d.amount||0);
+    byYear[y][q]+=total;
+  });
+  const years=Object.keys(byYear).sort();
+  if (!years.length) { qDiv.innerHTML='<p style="color:#64748b;">Aucune facture active.</p>'; tDiv.innerHTML='<p style="color:#64748b;">Aucune donnée fiscale.</p>'; return; }
+
+  let qHtml='<table class="admin-table"><thead><tr><th>'+TRANS[currentLang].year+'</th><th>T1</th><th>T2</th><th>T3</th><th>T4</th><th>Total</th></tr></thead><tbody>';
+  let grandTotal=0;
+  years.forEach(y=>{const q1=byYear[y][1]||0,q2=byYear[y][2]||0,q3=byYear[y][3]||0,q4=byYear[y][4]||0,sum=q1+q2+q3+q4; grandTotal+=sum; qHtml+=`<tr><td>${y}</td><td>${q1.toLocaleString()}</td><td>${q2.toLocaleString()}</td><td>${q3.toLocaleString()}</td><td>${q4.toLocaleString()}</td><td style="font-weight:600;">${sum.toLocaleString()}</td></tr>`;});
+  qHtml+='</tbody></table>';
+
+  const rate=(s.ifuRate||0.5)/100;
+  const taxDue=grandTotal*rate;
+  const minTax=10000;
+  const effectiveTax=Math.max(taxDue,minTax);
+  const hasMin=taxDue<minTax;
+
+  let tHtml='<div style="display:grid;gap:0.75rem;">'+
+    '<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="color:#94a3b8;">'+TRANS[currentLang].revenue+'</span><span style="color:#e2e8f0;font-weight:600;">'+grandTotal.toLocaleString()+' DA</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="color:#94a3b8;">Taux IFU</span><span style="color:#e2e8f0;">'+(s.ifuRate||0.5)+' %</span></div>'+
+    '<div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid rgba(255,255,255,0.06);"><span style="color:#94a3b8;">IFU Calculé</span><span style="color:#e2e8f0;">'+taxDue.toLocaleString()+' DA</span></div>';
+  if (hasMin) tHtml+='<div style="display:flex;justify-content:space-between;padding:0.5rem 0.75rem;background:rgba(251,191,36,0.1);border-radius:0.5rem;"><span style="color:#fbbf24;font-weight:600;">⚠ Minimum 10 000 DA/an</span><span style="color:#fbbf24;font-weight:600;">'+effectiveTax.toLocaleString()+' DA</span></div>';
+  tHtml+='<div style="display:flex;justify-content:space-between;padding:0.75rem 0;border-top:2px solid #1e40af;margin-top:0.5rem;"><span style="color:#60a5fa;font-weight:700;font-size:1.125rem;">IFU à payer</span><span style="color:#60a5fa;font-weight:700;font-size:1.125rem;">'+effectiveTax.toLocaleString()+' DA</span></div></div>';
+
+  qDiv.innerHTML=qHtml; tDiv.innerHTML=tHtml;
+}
+
+function generateG12() {
+  const year=parseInt(document.getElementById('g12Year').value), quarter=parseInt(document.getElementById('g12Quarter').value), resultDiv=document.getElementById('g12Result');
+  const s=getSettings();
+  let ca=0;
+  DB.documents.filter(d=>d.status!=='cancelled').forEach(d=>{
+    const dt=new Date(d.date);
+    if (dt.getFullYear()===year&&Math.ceil((dt.getMonth()+1)/3)===quarter) ca+=d.items?d.items.reduce((s,i)=>s+i.qty*i.price,0):(d.amount||0);
+  });
+  const rate=(s.ifuRate||0.5)/100, ifu=ca*rate, minTax=10000, eff=Math.max(ifu,minTax), hm=ifu<minTax;
+  resultDiv.innerHTML=`
+    <div class="g12-form" style="margin-top:1rem;">
+      <h3>RÉPUBLIQUE ALGÉRIENNE DÉMOCRATIQUE ET POPULAIRE</h3>
+      <p style="text-align:center;font-size:0.875rem;color:#64748b;margin-bottom:1.5rem;">Déclaration IFU — G n° 12</p>
+      <p style="text-align:center;font-weight:600;margin-bottom:1.5rem;">${escHtml(s.companyName)}${s.ownerName?' — '+escHtml(s.ownerName):''}${s.anaeNumber?' — N° '+escHtml(s.anaeNumber):''}</p>
+      <div class="g12-row"><span>Période déclarée</span><span style="font-weight:600;">T${quarter} — ${year}</span></div>
+      <div class="g12-row"><span>Chiffre d'Affaires brut encaissé (hors TVA)</span><span style="font-weight:600;">${ca.toLocaleString()} DA</span></div>
+      <div class="g12-row"><span>Taux IFU applicable</span><span>${s.ifuRate||0.5} %</span></div>
+      <div class="g12-row"><span>Base imposable</span><span style="font-weight:600;">${ca.toLocaleString()} DA</span></div>
+      <div class="g12-row"><span>Montant IFU calculé</span><span>${ifu.toLocaleString()} DA</span></div>
+      ${hm?'<div class="g12-row highlight"><span>⚠ Minimum annuel de perception (10 000 DA)</span><span>'+eff.toLocaleString()+' DA</span></div>':''}
+      <div class="g12-row" style="font-weight:700;font-size:1.125rem;border-bottom:none;margin-top:0.5rem;"><span>Total IFU à reporter</span><span style="color:#1e40af;">${eff.toLocaleString()} DA</span></div>
+      <div style="margin-top:1.5rem;padding:1rem;background:#fef3c7;border:1px solid #f59e0b;border-radius:0.5rem;font-size:0.8rem;color:#92400e;"><strong>Rappel :</strong> Minimum annuel de l'IFU : 10 000 DA. À déclarer sur <strong>anae.dz</strong>.</div>
+      <div style="margin-top:1rem;font-size:0.8rem;color:#64748b;text-align:center;"><p>${escHtml(s.companyName)} · ${escHtml(s.address)} · ${new Date().toLocaleDateString('fr-DZ')}</p></div>
+    </div>`;
+}
+function printModule() { window.print(); }
+
+// ============================================================
+//  BACKUP
+// ============================================================
+function exportBackup() {
+  const data=JSON.stringify(loadDB(),null,2), date=new Date().toISOString().split('T')[0];
+  const blob=new Blob([data],{type:'application/json'}), url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download='backup_besmainfoenergy_'+date+'.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  addActivity('Base de données exportée.'); toast('Sauvegarde téléchargée !');
+}
+function importBackup(event) {
+  const file=event.target.files[0]; if (!file) return;
+  const reader=new FileReader();
+  reader.onload=function(e) {
+    try {
+      const data=JSON.parse(e.target.result);
+      if (!data.clients||!Array.isArray(data.clients)) throw new Error('Invalide');
+      localStorage.setItem(DB_KEY,JSON.stringify(data));
+      DB=loadDB(); addActivity('Base restaurée depuis une sauvegarde.');
+      renderAll(); toast('Importation réussie ! '+data.clients.length+' clients, '+(data.documents||[]).length+' documents.');
+    } catch(err) { toast('Fichier invalide.','error'); }
+  };
+  reader.readAsText(file); event.target.value='';
+}
+
+// ============================================================
+//  RENDER ALL
+// ============================================================
+function renderAll() {
+  const s=getSettings();
+  document.getElementById('sidebarBrand').textContent=s.companyName;
+  // Dashboard
+  const activeDocs=DB.documents.filter(d=>d.status!=='cancelled');
+  const totalRev=activeDocs.reduce((sum,d)=>{const t=d.items?d.items.reduce((s,i)=>s+i.qty*i.price,0):(d.amount||0); return sum+t;},0);
+  const rate=(s.ifuRate||0.5)/100;
+  document.getElementById('dashRevenue').textContent=totalRev.toLocaleString();
+  document.getElementById('dashUnpaid').textContent=DB.documents.length;
+  document.getElementById('dashTax').textContent=Math.round(Math.max(totalRev*rate,10000)).toLocaleString();
+  document.getElementById('dashClients').textContent=DB.clients.filter(c=>!c.archived).length;
+  const actDiv=document.getElementById('dashActivity');
+  if (!DB.activity.length) actDiv.innerHTML='<span style="color:#64748b;">Aucune activité récente.</span>';
+  else actDiv.innerHTML=DB.activity.slice(0,10).map(a=>'<div style="display:flex;justify-content:space-between;padding:0.4rem 0;border-bottom:1px solid rgba(255,255,255,0.04);"><span>'+escHtml(a.msg)+'</span><span style="color:#64748b;font-size:0.75rem;">'+a.date+'</span></div>').join('');
+
+  renderClientsTable();
+  renderDocHistory();
+  renderInvoiceForm();
+  renderContractForm();
+  renderContractHistory();
+  renderAccounting();
+
+  // G12 year
+  const sel=document.getElementById('g12Year'); if(sel){const cy=new Date().getFullYear();sel.innerHTML='';for(let y=cy-5;y<=cy+1;y++){const o=document.createElement('option');o.value=y;o.textContent=y;if(y===cy)o.selected=true;sel.appendChild(o);}}
+}
+
+// ============================================================
+//  INIT
+// ============================================================
+resetInactivityTimer();
+checkAuth();
+applyLang(currentLang);
+renderAll();
+</script>
+</body>
+</html>

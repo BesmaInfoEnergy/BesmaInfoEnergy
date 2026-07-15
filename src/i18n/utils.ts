@@ -18,8 +18,8 @@ export function useTranslatedPath(lang: Lang) {
     const isDefaultLang = l === defaultLang;
     const langPrefix = !isDefaultLang || showDefaultLang ? `/${l}` : "";
     if (pathWithoutSlash) {
-      return `${langPrefix}/${pathWithoutSlash}/`;
+      return `${langPrefix}/${pathWithoutSlash}`;
     }
-    return `${langPrefix}/`;
+    return `${langPrefix || "/"}`;
   };
 }

@@ -24,7 +24,7 @@
   {
     "id": "app-mobile-service",
     "category": "it",
-    "image": "/images/projects/placeholder-mobile.svg",
+    "image": "/images/projects/placeholder-mobile.jpg",
     "tags": ["Flutter", "Firebase"],
     "link": null,
     "fr": {
@@ -46,7 +46,7 @@
   {
     "id": "installation-solaire",
     "category": "energy",
-    "image": "/images/projects/placeholder-solar.svg",
+    "image": "/images/projects/placeholder-solar.jpg",
     "tags": ["Photovoltaïque", "5kWc", "Autoconsommation"],
     "link": null,
     "fr": {
@@ -68,7 +68,7 @@
   {
     "id": "audit-energetique-industrie",
     "category": "energy",
-    "image": "/images/projects/placeholder-audit.svg",
+    "image": "/images/projects/placeholder-audit.jpg",
     "tags": ["Audit", "Industrie", "Économies d'énergie"],
     "link": null,
     "fr": {

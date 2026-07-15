@@ -46,10 +46,9 @@ const dir = propDir || (lang === "ar" ? "rtl" : "ltr");
       <slot />
     </main>
     <Footer lang={lang} dir={dir} />
+    <script>
+      import AOS from "aos";
+      AOS.init({ duration: 600, once: true, easing: "ease-out-cubic" });
+    </script>
   </body>
 </html>
-
-<script>
-  import AOS from "aos";
-  AOS.init({ duration: 600, once: true, easing: "ease-out-cubic" });
-</script>

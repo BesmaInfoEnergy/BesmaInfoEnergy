@@ -3,34 +3,40 @@ import { languages, defaultLang } from "../i18n/ui";
 
 const { lang: currentLang } = Astro.props;
 
+function normalizeLocalizedPath(path: string): string {
+  const cleaned = path.replace(/\/+$/, "") || "/";
+  return cleaned === "" ? "/" : cleaned;
+}
+
 function getLocalizedPath(targetLang: string): string {
-  const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+  const path = normalizeLocalizedPath(Astro.url.pathname);
   for (const code of Object.keys(languages)) {
     if (code === defaultLang) continue;
     const prefix = `/${code}`;
     if (path === prefix || path.startsWith(`${prefix}/`)) {
       const rest = path.slice(prefix.length) || "/";
       const result = targetLang === defaultLang ? rest : `/${targetLang}${rest}`;
-      return result.endsWith("/") ? result : `${result}/`;
+      return normalizeLocalizedPath(result);
     }
   }
   const result = targetLang === defaultLang ? path : `/${targetLang}${path}`;
-  return result.endsWith("/") ? result : `${result}/`;
+  return normalizeLocalizedPath(result);
 }
 ---
 
 <div class="relative inline-block">
-  <button id="lang-switcher-btn" class="flex items-center gap-1 text-sm font-medium text-neutral-700 hover:text-primary-500 border border-neutral-300 rounded-lg px-3 py-1.5 transition-colors" type="button" aria-haspopup="true" aria-expanded="false">
+  <button id="lang-switcher-btn" class="flex items-center gap-1 text-sm font-medium text-neutral-700 hover:text-primary-500 border border-neutral-300 rounded-lg px-3 py-1.5 transition-colors" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="lang-dropdown">
     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
     <span class="hidden lg:inline">{languages[currentLang]}</span>
   </button>
-  <div id="lang-dropdown" class="hidden absolute top-full mt-1 right-0 bg-white border border-neutral-200 rounded-lg shadow-lg py-1 min-w-[140px] z-50">
+  <div id="lang-dropdown" class="hidden absolute top-full mt-1 right-0 bg-white border border-neutral-200 rounded-lg shadow-lg py-1 min-w-[140px] z-50" role="menu" aria-label="Langues">
     {Object.entries(languages).map(([code, label]) => (
       <a
         href={getLocalizedPath(code)}
         class={`block px-4 py-2 text-sm hover:bg-neutral-100 transition-colors ${code === currentLang ? "font-semibold text-primary-600 bg-primary-50" : "text-neutral-700"}`}
+        role="menuitem"
         lang={code}
       >
         {label}

@@ -88,6 +88,28 @@
     }
   },
   {
+    "id": "dzgestcom-erp",
+    "category": "it",
+    "image": "/images/projects/DZGestCom ERP.png",
+    "tags": ["ERP", "Gestion", "SaaS", "Entreprise"],
+    "link": "https://dzgestcom-erp-besmainfoenergy.ai.studio",
+    "fr": {
+      "title": "DZGestCom ERP",
+      "description": "Solution ERP web dédiée à la gestion d'entreprise avec suivi des opérations commerciales, comptabilité et administration centralisée.",
+      "tech": "ERP, SaaS, Gestion d'entreprise, Dashboard"
+    },
+    "en": {
+      "title": "DZGestCom ERP",
+      "description": "Web ERP solution designed for business management with tracking of commercial operations, accounting and centralized administration.",
+      "tech": "ERP, SaaS, Business Management, Dashboard"
+    },
+    "ar": {
+      "title": "DZGestCom ERP",
+      "description": "حل ERP على الويب مخصص لإدارة المشاريع والأعمال مع متابعة العمليات التجارية والمحاسبة والإدارة المركزية.",
+      "tech": "ERP, SaaS, إدارة الأعمال, لوحة تحكم"
+    }
+  },
+  {
     "id": "dzsalat",
     "category": "it",
     "image": "/images/projects/dzsalat.jpg",

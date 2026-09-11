@@ -1,0 +1,37 @@
+Lancer le projet
+Le projet est configuré comme un site Astro, avec les scripts de démarrage dans package.json.
+
+1) Vérifier Node.js
+Assure-toi d’avoir Node.js installé, idéalement en version 18+.
+
+2) Installer les dépendances
+Dans le dossier du projet :
+$ npm install
+
+3) Démarrer le site en mode développement
+npm run dev
+
+Puis ouvre dans le navigateur :
+
+http://localhost:4321
+
+Commandes utiles :
+
+Mode développement
+npm run dev
+
+Build de production
+$ npm run build
+
+Prévisualisation du build
+$ npm run preview
+
+
+Si tu veux lancer depuis le terminal Windows PowerShell
+cd "c:\BesmaInfoEnergy\04_Projects\BesmaInfoEnergy"
+npm install
+npm run dev
+
+
+
+

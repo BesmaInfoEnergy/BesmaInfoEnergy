@@ -130,5 +130,28 @@
       "description": "تطبيق أندرويد يوفر أوقات صلاة دقيقة وفقًا للطرق المحلية الجزائرية، مع أذان تلقائي، تسبيح رقمي، وضع صامت تلقائي أثناء الصلاة، بوصلة القبلة، ودعم متعدد اللغات (العربية، الفرنسية، الإنجليزية). بدون إعلانات.",
       "tech": "Flutter, API الأذان, خدمات الموقع"
     }
+  },
+  {
+    "id": "dzmoshaf",
+    "category": "it",
+    "image": "/images/projects/placeholder-mobile.jpg",
+    "tags": ["Android", "Coran", "Flutter", "Algérie"],
+    "link": "/dzmoshaf.apk",
+    "download": true,
+    "fr": {
+      "title": "DZMoshaf — Application mobile du Coran",
+      "description": "Application Android de lecture du Coran pensée pour offrir un accès simple et pratique au Moshaf sur mobile.",
+      "tech": "Flutter, Android, Interface multilingue"
+    },
+    "en": {
+      "title": "DZMoshaf — Quran mobile app",
+      "description": "Android app for reading the Quran, designed to provide simple and convenient access to the Mushaf on mobile devices.",
+      "tech": "Flutter, Android, Multilingual interface"
+    },
+    "ar": {
+      "title": "DZMoshaf — تطبيق القرآن الكريم",
+      "description": "تطبيق أندرويد لقراءة القرآن الكريم، مصمم لتوفير وصول بسيط وعملي إلى المصحف على الهاتف.",
+      "tech": "Flutter، Android، واجهة متعددة اللغات"
+    }
   }
 ]

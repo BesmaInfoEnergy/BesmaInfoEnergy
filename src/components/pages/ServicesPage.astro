@@ -9,6 +9,12 @@ import services from "../../data/services.json";
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
+
+const serviceHighlights = [
+  { label: lang === "fr" ? "Sites web" : lang === "ar" ? "مواقع الويب" : "Websites", value: "01" },
+  { label: lang === "fr" ? "Maintenance" : lang === "ar" ? "الصيانة" : "Maintenance", value: "02" },
+  { label: lang === "fr" ? "Énergie" : lang === "ar" ? "الطاقة" : "Energy", value: "03" },
+];
 ---
 
 <BaseLayout
@@ -17,22 +23,35 @@ const translatePath = useTranslatedPath(lang);
   lang={lang}
   dir={lang === "ar" ? "rtl" : "ltr"}
 >
-  <section class="py-20 md:py-28 bg-gradient-to-b from-primary-900 to-primary-700 text-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">{t("section.services.title")}</h1>
-      <p class="text-xl text-neutral-200">{t("section.services.subtitle")}</p>
+  <section class="relative overflow-hidden bg-slate-950 text-white">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.25),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.2),_transparent_35%)]"></div>
+    <div class="section-shell relative py-20 md:py-28">
+      <div class="mx-auto max-w-4xl text-center" data-aos="fade-up">
+        <span class="eyebrow">{lang === "fr" ? "Nos services" : lang === "ar" ? "خدماتنا" : "Our services"}</span>
+        <h1 class="mt-6 text-4xl font-black tracking-tight md:text-5xl">{t("section.services.title")}</h1>
+        <p class="mt-5 text-lg text-slate-200 md:text-xl">{t("section.services.subtitle")}</p>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-3">
+          {serviceHighlights.map((item) => (
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+              <div class="text-2xl font-bold text-white">{item.value}</div>
+              <div class="mt-1 text-sm uppercase tracking-[0.16em] text-slate-300">{item.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="py-20 md:py-28">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="section-shell">
       <div class="mb-16">
-        <h2 class="text-3xl font-bold text-primary-700 mb-8 flex items-center gap-3">
-          <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+        <div class="mb-8 flex items-center gap-3 text-3xl font-bold text-primary-700">
+          <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
           {t("services.it.title")}
-        </h2>
-        <p class="text-lg text-neutral-600 mb-8 max-w-3xl">{t("services.it.desc")}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+        <p class="mb-8 max-w-3xl text-lg text-slate-600">{t("services.it.desc")}</p>
+        <div class="grid gap-6 md:grid-cols-2">
           {services.filter((s) => s.category === "it").map((service) => (
             <ServiceCard key={service.id} service={service} lang={lang} t={t} contactUrl={translatePath("contact")} />
           ))}
@@ -41,12 +60,12 @@ const translatePath = useTranslatedPath(lang);
       </div>
 
       <div>
-        <h2 class="text-3xl font-bold text-secondary-700 mb-8 flex items-center gap-3">
-          <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+        <div class="mb-8 flex items-center gap-3 text-3xl font-bold text-secondary-700">
+          <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
           {t("services.energy.title")}
-        </h2>
-        <p class="text-lg text-neutral-600 mb-8 max-w-3xl">{t("services.energy.desc")}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+        <p class="mb-8 max-w-3xl text-lg text-slate-600">{t("services.energy.desc")}</p>
+        <div class="grid gap-6 md:grid-cols-2">
           {services.filter((s) => s.category === "energy").map((service) => (
             <ServiceCard key={service.id} service={service} lang={lang} t={t} contactUrl={translatePath("contact")} />
           ))}

@@ -53,6 +53,8 @@ const process = [
     subtitle={t("hero.subtitle")}
     ctaText={t("hero.cta.services")}
     ctaLink={translatePath("services")}
+    contactLink={translatePath("contact")}
+    contactText={lang === "fr" ? "Demander un devis" : lang === "ar" ? "اطلب عرض سعر" : "Request a quote"}
     bannerSrc="/images/hero-banner.png"
   />
 
@@ -151,6 +153,31 @@ const process = [
           {services.filter((s) => s.category === "energy").map((service) => (
             <ServiceCard key={service.id} service={service} lang={lang} t={t} contactUrl={translatePath("contact")} />
           ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28">
+    <div class="section-shell">
+      <div class="rounded-[2rem] border border-primary-100 bg-gradient-to-r from-primary-50 via-white to-secondary-50 p-8 shadow-soft md:p-10" data-aos="fade-up">
+        <div class="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <span class="inline-flex rounded-full border border-primary-200 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-primary-700">
+              {lang === "fr" ? "Réponse rapide" : lang === "ar" ? "استجابة سريعة" : "Fast response"}
+            </span>
+            <h3 class="mt-4 text-2xl font-bold text-slate-900 md:text-3xl">
+              {lang === "fr" ? "Besoin d’une solution sur mesure ?" : lang === "ar" ? "هل تحتاج إلى حل مخصص؟" : "Need a custom solution?"}
+            </h3>
+          </div>
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <a href="tel:+213663622010" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800">
+              {lang === "fr" ? "Appeler maintenant" : lang === "ar" ? "اتصل الآن" : "Call now"}
+            </a>
+            <a href={translatePath("contact")} class="inline-flex items-center justify-center rounded-full border border-primary-200 bg-white px-5 py-3 text-sm font-semibold text-primary-700 transition hover:border-primary-300 hover:bg-primary-50">
+              {lang === "fr" ? "Demander un devis" : lang === "ar" ? "اطلب عرض سعر" : "Request a quote"}
+            </a>
+          </div>
         </div>
       </div>
     </div>

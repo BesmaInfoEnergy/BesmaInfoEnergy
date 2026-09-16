@@ -6,6 +6,12 @@ import projects from "../../data/projects.json";
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+const stats = [
+  { value: projects.length, label: lang === "fr" ? "Projets" : lang === "ar" ? "مشاريع" : "Projects" },
+  { value: "2", label: lang === "fr" ? "Domaines" : lang === "ar" ? "مجالات" : "Domains" },
+  { value: "100%", label: lang === "fr" ? "Focalisé" : lang === "ar" ? "مركّز" : "Focused" },
+];
 ---
 
 <BaseLayout
@@ -14,16 +20,36 @@ const t = useTranslations(lang);
   lang={lang}
   dir={lang === "ar" ? "rtl" : "ltr"}
 >
-  <section class="py-20 md:py-28 bg-gradient-to-b from-primary-900 to-primary-700 text-white">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">{t("portfolio.title")}</h1>
-      <p class="text-xl text-neutral-200">{t("portfolio.subtitle")}</p>
+  <section class="relative overflow-hidden bg-slate-950 text-white">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.25),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.2),_transparent_35%)]"></div>
+    <div class="section-shell relative py-20 md:py-28">
+      <div class="mx-auto max-w-4xl text-center" data-aos="fade-up">
+        <span class="eyebrow">{lang === "fr" ? "Nos réalisations" : lang === "ar" ? "إنجازاتنا" : "Our work"}</span>
+        <h1 class="mt-6 text-4xl font-black tracking-tight md:text-5xl">{t("portfolio.title")}</h1>
+        <p class="mt-5 text-lg text-slate-200 md:text-xl">{t("portfolio.subtitle")}</p>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-3">
+          {stats.map((item) => (
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm">
+              <div class="text-2xl font-bold text-white">{item.value}</div>
+              <div class="mt-1 text-xs uppercase tracking-[0.16em] text-slate-300">{item.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   </section>
 
   <section class="py-20 md:py-28">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div class="section-shell">
+      <div class="mb-10 flex items-center justify-between gap-4">
+        <h2 class="text-3xl font-bold text-slate-900">{lang === "fr" ? "Réalisations récentes" : lang === "ar" ? "المشاريع الأخيرة" : "Recent projects"}</h2>
+        <span class="rounded-full border border-slate-200 bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+          {projects.length} {lang === "fr" ? "projets" : lang === "ar" ? "مشاريع" : "projects"}
+        </span>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2">
         {projects.map((project) => (
           <ProjectCard key={project.id} project={project} lang={lang} t={t} />
         ))}

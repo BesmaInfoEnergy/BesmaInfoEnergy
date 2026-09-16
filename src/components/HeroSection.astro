@@ -1,5 +1,5 @@
 ---
-const { lang, title, subtitle, ctaText, ctaLink, bannerSrc } = Astro.props;
+const { lang, title, subtitle, ctaText, ctaLink, bannerSrc, contactLink, contactText } = Astro.props;
 const isRTL = lang === "ar";
 const trustStats = [
   { value: "120+", label: lang === "fr" ? "Projets" : lang === "ar" ? "مشاريع" : "Projects" },
@@ -38,23 +38,23 @@ const trustStats = [
           {subtitle}
         </p>
 
-        <div class="mt-8 flex flex-wrap gap-4">
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {ctaLink && ctaText && (
-            <a href={ctaLink} class="btn-primary">
+            <a href={ctaLink} class="btn-primary w-full sm:w-auto">
               {ctaText}
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d={isRTL ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"} /></svg>
             </a>
           )}
-          <a href="/contact" class="btn-secondary">
-            {lang === "fr" ? "Demander un devis" : lang === "ar" ? "اطلب عرض سعر" : "Request a quote"}
+          <a href={contactLink ?? "/contact"} class="btn-secondary w-full sm:w-auto">
+            {contactText ?? (lang === "fr" ? "Demander un devis" : lang === "ar" ? "اطلب عرض سعر" : "Request a quote")}
           </a>
         </div>
 
-        <div class="mt-10 grid max-w-xl grid-cols-3 gap-3">
+        <div class="mt-10 grid max-w-xl grid-cols-2 gap-3 sm:grid-cols-3">
           {trustStats.map((stat) => (
             <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-4 backdrop-blur-sm">
-              <div class="text-xl font-bold text-white md:text-2xl">{stat.value}</div>
-              <div class="mt-1 text-[11px] uppercase tracking-[0.12em] text-slate-300">{stat.label}</div>
+              <div class="text-lg font-bold text-white md:text-2xl">{stat.value}</div>
+              <div class="mt-1 text-[10px] uppercase tracking-[0.12em] text-slate-300 sm:text-[11px]">{stat.label}</div>
             </div>
           ))}
         </div>

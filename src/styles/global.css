@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    color-scheme: light;
+  }
+
   html {
     scroll-behavior: smooth;
   }
@@ -12,7 +16,43 @@
   }
 
   body {
-    @apply bg-neutral-50 text-neutral-800 font-sans antialiased;
+    @apply bg-slate-50 text-slate-800 font-sans antialiased leading-relaxed;
+    background-image: radial-gradient(circle at top, rgba(37, 99, 235, 0.08), transparent 38%),
+      radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.08), transparent 30%);
+  }
+
+  img {
+    @apply max-w-full;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  ::selection {
+    @apply bg-primary-100 text-primary-900;
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-slate-100 backdrop-blur-sm;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary-600 px-5 py-3 text-sm font-semibold text-white shadow-soft transition-all duration-200 hover:bg-primary-700 hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-semibold text-white transition-all duration-200 hover:bg-white/10;
+  }
+
+  .glass-panel {
+    @apply rounded-[1.75rem] border border-white/10 bg-white/10 shadow-soft backdrop-blur-sm;
   }
 }
 

@@ -66,6 +66,7 @@ export const ui = {
     "about.title": "À propos de moi",
     "about.subtitle":
       "Auto-entrepreneur en informatique et énergie, je vous accompagne dans vos projets",
+    "about.legal_status": "BesmaInfoEnergy est une Auto-Entreprise.",
     "about.bio":
       "Auto-entrepreneur passionné par les technologies de l'information et les énergies renouvelables. Je combine ces deux expertises pour offrir des solutions complètes et innovantes à mes clients en Algérie.",
     "about.mission": "Ma mission",
@@ -249,6 +250,7 @@ export const ui = {
     "about.title": "About Me",
     "about.subtitle":
       "Self-employed IT and energy expert, I support you in your projects",
+    "about.legal_status": "BesmaInfoEnergy is an Auto-Entreprise.",
     "about.bio":
       "Self-employed entrepreneur passionate about information technologies and renewable energies. I combine these two areas of expertise to offer complete and innovative solutions to my clients in Algeria.",
     "about.mission": "My mission",
@@ -426,6 +428,7 @@ export const ui = {
     "footer.privacy": "سياسة الخصوصية",
     "about.title": "من أنا",
     "about.subtitle": "مقاول ذاتي في المعلوماتية والطاقة، أرافقكم في مشاريعكم",
+    "about.legal_status": "BesmaInfoEnergy هي شركة ذات مسؤولية محدودة/مقاول ذاتي.",
     "about.bio":
       "مقاول ذاتي شغوف بتكنولوجيا المعلومات والطاقات المتجددة. أُجمع بين هذين المجالين لتقديم حلول متكاملة ومبتكرة لعملائي في الجزائر.",
     "about.mission": "رسالتي",

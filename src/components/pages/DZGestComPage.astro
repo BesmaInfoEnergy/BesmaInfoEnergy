@@ -1,0 +1,234 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HeroSection from "../HeroSection.astro";
+import CTASection from "../CTASection.astro";
+import FAQItem from "../FAQItem.astro";
+import { getLangFromUrl, useTranslations, useTranslatedPath } from "../../i18n/utils";
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const translatePath = useTranslatedPath(lang);
+const isRtl = lang === "ar";
+
+// --- Contenu propre à DZGestCom (produit, pas un service générique) ---
+
+const heroTitle =
+  lang === "fr"
+    ? "Votre commerce, enfin sous contrôle."
+    : lang === "ar"
+      ? "تجارتك أخيرًا تحت السيطرة."
+      : "Your business, finally under control.";
+
+const heroSubtitle =
+  lang === "fr"
+    ? "DZGestCom réunit stock, ventes, clients et trésorerie dans un seul outil, pensé pour la réalité du commerce en Algérie."
+    : lang === "ar"
+      ? "يجمع DZGestCom المخزون والمبيعات والعملاء والخزينة في أداة واحدة، مصممة لواقع التجارة في الجزائر."
+      : "DZGestCom brings stock, sales, customers and cash flow together in one tool, built for real businesses in Algeria.";
+
+const benefits = [
+  {
+    title:
+      lang === "fr" ? "Fini les surprises en fin de mois" : lang === "ar" ? "لا مزيد من المفاجآت في نهاية الشهر" : "No more end-of-month surprises",
+    text:
+      lang === "fr"
+        ? "Chaque vente, chaque paiement en attente et chaque niveau de stock est visible en un coup d'œil, à jour en temps réel."
+        : lang === "ar"
+          ? "كل عملية بيع ودفعة معلقة ومستوى مخزون مرئي بلمحة واحدة، محدّث في الوقت الفعلي."
+          : "Every sale, pending payment and stock level is visible at a glance, updated in real time.",
+  },
+  {
+    title:
+      lang === "fr" ? "Du temps retrouvé, pas de la paperasse en plus" : lang === "ar" ? "وقت مستعاد، لا أوراق إضافية" : "Time back, not more paperwork",
+    text:
+      lang === "fr"
+        ? "DZGestCom automatise les tâches répétitives pour que votre temps retourne à ce qui fait vraiment tourner votre commerce."
+        : lang === "ar"
+          ? "يُؤتمت DZGestCom المهام المتكررة ليعود وقتك لما يُحرّك تجارتك فعليًا."
+          : "DZGestCom automates repetitive tasks so your time goes back to what actually runs your business.",
+  },
+  {
+    title:
+      lang === "fr" ? "Une croissance que vous pouvez mesurer" : lang === "ar" ? "نمو يمكنك قياسه" : "Growth you can measure",
+    text:
+      lang === "fr"
+        ? "DZGestCom transforme vos données brutes en réponses claires, pour que chaque décision s'appuie sur des faits."
+        : lang === "ar"
+          ? "يحوّل DZGestCom بياناتك الخام إلى إجابات واضحة، لتستند كل قراراتك إلى حقائق."
+          : "DZGestCom turns raw data into clear answers, so every decision is based on facts.",
+  },
+];
+
+const pricingTiers = [
+  {
+    name: lang === "fr" ? "Essentiel" : lang === "ar" ? "أساسي" : "Essential",
+    price: lang === "fr" ? "Sur devis" : lang === "ar" ? "عرض سعر" : "Custom quote",
+    features:
+      lang === "fr"
+        ? ["Gestion des ventes", "Suivi de stock", "1 utilisateur"]
+        : lang === "ar"
+          ? ["إدارة المبيعات", "متابعة المخزون", "مستخدم واحد"]
+          : ["Sales management", "Stock tracking", "1 user"],
+    highlighted: false,
+  },
+  {
+    name: lang === "fr" ? "Pro" : lang === "ar" ? "احترافي" : "Pro",
+    price: lang === "fr" ? "Sur devis" : lang === "ar" ? "عرض سعر" : "Custom quote",
+    features:
+      lang === "fr"
+        ? ["Tout Essentiel", "Gestion clients", "Rapports détaillés", "3 utilisateurs"]
+        : lang === "ar"
+          ? ["كل مزايا الأساسي", "إدارة العملاء", "تقارير مفصلة", "3 مستخدمين"]
+          : ["Everything in Essential", "Customer management", "Detailed reports", "3 users"],
+    highlighted: true,
+  },
+  {
+    name: lang === "fr" ? "Croissance" : lang === "ar" ? "النمو" : "Growth",
+    price: lang === "fr" ? "Sur devis" : lang === "ar" ? "عرض سعر" : "Custom quote",
+    features:
+      lang === "fr"
+        ? ["Tout Pro", "Multi-boutiques", "Support prioritaire", "Utilisateurs illimités"]
+        : lang === "ar"
+          ? ["كل مزايا الاحترافي", "متعدد المتاجر", "دعم أولوية", "مستخدمون غير محدودين"]
+          : ["Everything in Pro", "Multi-store", "Priority support", "Unlimited users"],
+    highlighted: false,
+  },
+];
+
+const faqItems = [
+  {
+    question: lang === "fr" ? "Est-ce compliqué à apprendre ?" : lang === "ar" ? "هل من الصعب تعلمه؟" : "Is it hard to learn?",
+    answer:
+      lang === "fr"
+        ? "Non. Si vous savez utiliser WhatsApp, vous saurez utiliser DZGestCom."
+        : lang === "ar"
+          ? "لا. إذا كنت تعرف استخدام واتساب، فستعرف استخدام DZGestCom."
+          : "No. If you know how to use WhatsApp, you'll know how to use DZGestCom.",
+  },
+  {
+    question: lang === "fr" ? "Mes données sont-elles en sécurité ?" : lang === "ar" ? "هل بياناتي آمنة؟" : "Is my data secure?",
+    answer:
+      lang === "fr"
+        ? "Oui, vos données restent les vôtres, stockées de façon sécurisée, et vous seul y avez accès."
+        : lang === "ar"
+          ? "نعم، بياناتك تبقى ملكك، مخزنة بأمان، وأنت وحدك من يملك الوصول إليها."
+          : "Yes, your data stays yours, stored securely, with access only for you.",
+  },
+  {
+    question:
+      lang === "fr" ? "J'ai déjà un vieux logiciel, c'est compliqué de migrer ?" : lang === "ar" ? "لدي برنامج قديم، هل النقل معقد؟" : "I have an old system, is migration hard?",
+    answer:
+      lang === "fr"
+        ? "Non — c'est justement ce que nous savons faire : récupérer vos données existantes et les transférer proprement."
+        : lang === "ar"
+          ? "لا — هذا بالضبط ما نُتقنه: استرجاع بياناتك الحالية ونقلها بسلاسة."
+          : "No — that's exactly what we do: recover your existing data and transfer it cleanly.",
+  },
+];
+---
+
+<BaseLayout
+  title="DZGestCom"
+  description={heroSubtitle}
+  lang={lang}
+  dir={isRtl ? "rtl" : "ltr"}
+>
+  <HeroSection
+    lang={lang}
+    title={heroTitle}
+    subtitle={heroSubtitle}
+    ctaText={lang === "fr" ? "Voir une démo de 15 minutes" : lang === "ar" ? "شاهد عرضًا تجريبيًا لمدة 15 دقيقة" : "See a 15-minute demo"}
+    ctaLink={translatePath("contact")}
+    contactLink={translatePath("contact")}
+    contactText={lang === "fr" ? "Demander une démo" : lang === "ar" ? "اطلب عرضًا تجريبيًا" : "Request a demo"}
+    bannerSrc="/images/dzgestcom-banner.png"
+  />
+
+  <!-- Bénéfices -->
+  <section class="py-20 md:py-28">
+    <div class="section-shell">
+      <div class="mb-16 text-center" data-aos="fade-up">
+        <h2 class="mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
+          {lang === "fr" ? "Pourquoi DZGestCom" : lang === "ar" ? "لماذا DZGestCom" : "Why DZGestCom"}
+        </h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {benefits.map((item, index) => (
+          <article
+            class="rounded-2xl border border-slate-200 bg-white p-6 shadow-soft"
+            data-aos="fade-up"
+            data-aos-delay={index * 70}
+          >
+            <h3 class="text-lg font-semibold text-slate-900">{item.title}</h3>
+            <p class="mt-3 text-sm leading-relaxed text-slate-600">{item.text}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Tarifs -->
+  <section class="bg-white py-20 md:py-28">
+    <div class="section-shell">
+      <div class="mb-16 text-center" data-aos="fade-up">
+        <h2 class="mb-4 text-3xl font-bold text-slate-900 md:text-4xl">
+          {lang === "fr" ? "Une offre pour chaque étape" : lang === "ar" ? "عرض يناسب كل مرحلة" : "A plan for every stage"}
+        </h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {pricingTiers.map((tier, index) => (
+          <div
+            class={`rounded-3xl border p-8 ${
+              tier.highlighted
+                ? "border-primary-300 bg-gradient-to-b from-primary-50 to-white shadow-soft ring-1 ring-primary-200"
+                : "border-slate-200 bg-slate-50"
+            }`}
+            data-aos="fade-up"
+            data-aos-delay={index * 70}
+          >
+            <h3 class="text-xl font-bold text-slate-900">{tier.name}</h3>
+            <div class="mt-3 text-2xl font-black text-primary-700">{tier.price}</div>
+            <ul class="mt-6 space-y-3">
+              {tier.features.map((f) => (
+                <li class="flex items-start gap-2 text-sm text-slate-600">
+                  <svg class="mt-0.5 h-4 w-4 shrink-0 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 3" />
+                  </svg>
+                  {f}
+                </li>
+              ))}
+            </ul>
+            <a
+              href={translatePath("contact")}
+              class={`mt-8 inline-flex w-full items-center justify-center rounded-full px-5 py-3 text-sm font-semibold transition ${
+                tier.highlighted
+                  ? "bg-primary-600 text-white hover:bg-primary-700"
+                  : "border border-primary-200 bg-white text-primary-700 hover:bg-primary-50"
+              }`}
+            >
+              {lang === "fr" ? "Demander un devis" : lang === "ar" ? "اطلب عرض سعر" : "Request a quote"}
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-20 md:py-28">
+    <div class="section-shell mx-auto max-w-3xl">
+      <div class="mb-12 text-center" data-aos="fade-up">
+        <h2 class="text-3xl font-bold text-slate-900 md:text-4xl">
+          {lang === "fr" ? "Questions fréquentes" : lang === "ar" ? "الأسئلة الشائعة" : "Frequently asked questions"}
+        </h2>
+      </div>
+      <div class="space-y-4">
+        {faqItems.map((item) => (
+          <FAQItem question={item.question} answer={item.answer} lang={lang} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CTASection lang={lang} t={t} />
+</BaseLayout>

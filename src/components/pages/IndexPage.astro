@@ -15,6 +15,33 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const translatePath = useTranslatedPath(lang);
 
+const sourcingCopy = {
+  fr: {
+    badge: "Innovation Besma Info Energy",
+    title: "DZ-Sourcing Pro — Intelligence des marchés publics en Algérie",
+    description:
+      "Ne ratez plus aucun appel d'offres en Algérie. Veille automatisée chaque matin à 07h00 sur les 58 wilayas (BTP, informatique, médical, énergie). Testez le service gratuitement pendant 14 jours.",
+    button: "Accéder à la plateforme (14 jours gratuits)",
+    payment: "Paiement en Algérie : BaridiMob • Facture fiscale NIF",
+  },
+  en: {
+    badge: "Besma Info Energy innovation",
+    title: "DZ-Sourcing Pro — Public procurement intelligence in Algeria",
+    description:
+      "Don't miss public tenders in Algeria. Automated monitoring every morning at 07:00 across all 58 wilayas (construction, IT, healthcare, energy). Try the service free for 14 days.",
+    button: "Visit the platform (14 days free)",
+    payment: "Payment in Algeria: BaridiMob • Tax invoice with NIF",
+  },
+  ar: {
+    badge: "ابتكار Besma Info Energy",
+    title: "DZ-Sourcing Pro — ذكاء الصفقات العمومية في الجزائر",
+    description:
+      "لا تفوّت أي مناقصة في الجزائر. متابعة آلية كل صباح على الساعة 07:00 عبر الولايات الـ58 (البناء، المعلوماتية، الصحة، والطاقة). جرّب الخدمة مجانًا لمدة 14 يومًا.",
+    button: "زيارة المنصة (14 يومًا مجانًا)",
+    payment: "الدفع في الجزائر: BaridiMob • فاتورة ضريبية برقم التعريف الجبائي",
+  },
+}[lang];
+
 const whyChooseUs = [
   {
     title: lang === "fr" ? "Conseil sur mesure" : lang === "ar" ? "استشارة مخصصة" : "Tailored advice",
@@ -123,6 +150,36 @@ const process = [
           </div>
         ))}
       </div>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-16">
+    <div class="section-shell">
+      <article
+        class="rounded-3xl border border-emerald-700 bg-gradient-to-br from-emerald-950 to-slate-900 p-7 text-white shadow-soft md:p-9"
+        data-aos="fade-up"
+      >
+        <span class="inline-flex rounded-full border border-emerald-500 bg-emerald-500/15 px-3 py-1 text-xs font-bold uppercase tracking-wide text-emerald-300">
+          {sourcingCopy.badge}
+        </span>
+        <h2 class="mt-4 text-2xl font-extrabold leading-tight md:text-3xl">
+          {sourcingCopy.title}
+        </h2>
+        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-slate-300 md:text-base">
+          {sourcingCopy.description}
+        </p>
+        <div class="mt-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+          <a
+            href="https://dz-sourcing-pro.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex rounded-xl bg-emerald-500 px-5 py-3 text-sm font-extrabold text-emerald-950 transition hover:bg-emerald-400"
+          >
+            {sourcingCopy.button} <span aria-hidden="true" class="ms-2">→</span>
+          </a>
+          <p class="text-xs text-slate-400">{sourcingCopy.payment}</p>
+        </div>
+      </article>
     </div>
   </section>
 
